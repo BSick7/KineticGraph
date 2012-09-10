@@ -11,13 +11,20 @@ namespace WickedSick.KineticGraph.Controls
         public Node Source { get; set; }
         public Node Sink { get; set; }
 
-        private Line _Line;
+        private readonly Line _Line;
+        private readonly Polygon _Triangle;
 
         public Edge()
         {
             _Line = new Line { StrokeThickness = 2, Stroke = new SolidColorBrush(Colors.Black) };
             Children.Add(_Line);
+
+            _Triangle = BuildTriangle(5, 9);
+            Children.Add(_Triangle);
+            IsHitTestVisible = false;
         }
+
+        #region Properties
 
         protected Point StartPoint { get; set; }
         protected Point EndPoint { get; set; }
@@ -32,10 +39,14 @@ namespace WickedSick.KineticGraph.Controls
             set { SetValue(TopProperty, value); }
         }
 
+        #endregion
+
         public void UpdatePosition()
         {
             SetCoordinates(Source.PhysicalState.Position, Sink.PhysicalState.Position);
         }
+
+        #region Helpers
 
         private void SetCoordinates(Point a, Point b)
         {
@@ -63,7 +74,6 @@ namespace WickedSick.KineticGraph.Controls
             _Line.X2 = EndPoint.X > StartPoint.X ? Width : 0;
             _Line.Y2 = EndPoint.Y > StartPoint.Y ? Height : 0;
 
-            /*
             //Rotate the arrow then move it to the desired position
             TransformGroup tg = new TransformGroup();
             tg.Children.Add(new RotateTransform
@@ -78,10 +88,7 @@ namespace WickedSick.KineticGraph.Controls
                 Y = Height / 2 - _Triangle.Height / 2
             });
             _Triangle.RenderTransform = tg;
-            */
         }
-
-        #region Helpers
 
         private static Polygon BuildTriangle(double width, double height)
         {
