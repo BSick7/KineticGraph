@@ -149,6 +149,11 @@ namespace WickedSick.KineticGraph.Controls.Physics
             return totalKE;
         }
 
+        public void Disturb()
+        {
+            _IsGraphDisturbed = true;
+        }
+
         protected virtual void OnGraphStabilizing()
         {
         }

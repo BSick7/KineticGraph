@@ -201,6 +201,7 @@ namespace WickedSick.KineticGraph.Controls
             Nodes.Add(node);
             Children.Add(node);
             node.PhysicalState.Position = GetRandomPoint();
+            _Engine.Disturb();
             return node;
         }
 
@@ -218,6 +219,7 @@ namespace WickedSick.KineticGraph.Controls
                 return;
             Children.Remove(existing);
             Nodes.Remove(existing);
+            _Engine.Disturb();
         }
 
         #endregion
@@ -243,6 +245,7 @@ namespace WickedSick.KineticGraph.Controls
             var edge = new Edge { Source = FindOrAddNode(newEdge.Source), Sink = FindOrAddNode(newEdge.Sink), };
             Edges.Add(edge);
             Children.Add(edge);
+            _Engine.Disturb();
             return edge;
         }
 
@@ -260,6 +263,7 @@ namespace WickedSick.KineticGraph.Controls
                 return;
             Children.Remove(existing);
             Edges.Remove(existing);
+            _Engine.Disturb();
         }
 
         #endregion

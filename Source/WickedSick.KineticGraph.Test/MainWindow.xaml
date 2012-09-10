@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:kgcontrols="clr-namespace:WickedSick.KineticGraph.Controls;assembly=WickedSick.KineticGraph.Controls"
     Title="MainWindow" Height="350" Width="525">
-    <Grid>
+    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown_1" Background="Transparent">
         <kgcontrols:Graph NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}" />
     </Grid>
 </Window>
