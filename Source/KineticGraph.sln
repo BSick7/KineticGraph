@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Controls", "WickedSick.KineticGraph.Controls\WickedSick.KineticGraph.Controls.csproj", "{4884C128-DE69-4C56-9EEA-4F9EBD6B8820}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4884C128-DE69-4C56-9EEA-4F9EBD6B8820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4884C128-DE69-4C56-9EEA-4F9EBD6B8820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4884C128-DE69-4C56-9EEA-4F9EBD6B8820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4884C128-DE69-4C56-9EEA-4F9EBD6B8820}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
