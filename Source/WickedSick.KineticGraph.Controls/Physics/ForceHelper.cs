@@ -25,9 +25,6 @@ namespace WickedSick.KineticGraph.Controls.Physics
         /// <param name="f2">Force at point b</param>
         public static void ApplyCoulombRepulsion(NodeState a, NodeState b, double k, bool applyToBoth = false)
         {
-            var f1 = a.Force;
-            var f2 = b.Force;
-
             double dx = a.Position.X - b.Position.X;
             double dy = a.Position.Y - b.Position.Y;
             double sqDist = dx * dx + dy * dy;
@@ -45,13 +42,13 @@ namespace WickedSick.KineticGraph.Controls.Physics
             double tempX = mag * (dx / d);
             double tempY = mag * (dy / d);
 
-            f1.X += tempX;
-            f1.Y += tempY;
+            a.Force.X += tempX;
+            a.Force.Y += tempY;
 
             if (applyToBoth)
             {
-                f2.X -= tempX;
-                f2.Y -= tempY;
+                b.Force.X -= tempX;
+                b.Force.Y -= tempY;
             }
         }
 
@@ -70,20 +67,17 @@ namespace WickedSick.KineticGraph.Controls.Physics
 
         public static void ApplyHookeAttraction(NodeState a, NodeState b, double k)
         {
-            var f1 = a.Force;
-            var f2 = b.Force;
-            
             var p1 = a.Position;
             var p2 = b.Position;
             
             var x = -k * (p1.X - p2.X);
             var y = -k * (p1.Y - p2.Y);
             
-            f1.X += x;
-            f1.Y += y;
+            a.Force.X += x;
+            a.Force.Y += y;
 
-            f2.X -= x;
-            f2.Y -= y;
+            b.Force.X -= x;
+            b.Force.Y -= y;
         }
     }
 }

@@ -1,0 +1,10 @@
+﻿<Window 
+    x:Class="WickedSick.KineticGraph.Test.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:kgcontrols="clr-namespace:WickedSick.KineticGraph.Controls;assembly=WickedSick.KineticGraph.Controls"
+    Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <kgcontrols:Graph NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}" />
+    </Grid>
+</Window>

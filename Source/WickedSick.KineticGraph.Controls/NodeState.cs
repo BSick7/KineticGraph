@@ -2,7 +2,7 @@
 
 namespace WickedSick.KineticGraph.Controls
 {
-    public struct NodeState
+    public class NodeState
     {
         public Point Position;
         public Point Velocity;

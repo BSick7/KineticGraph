@@ -1,20 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using WickedSick.KineticGraph.Controls.Physics;
 
 namespace WickedSick.KineticGraph.Controls
 {
     public class Graph : Canvas
     {
+        private Random _Randomizer = new Random();
+
         private readonly Engine _Engine = new Engine();
+        private const double MAX_FPS = 100;
+        private const double MAX_MSPF = 1000 / MAX_FPS;
+
+        private DispatcherTimer _Timer;
 
         public Graph()
         {
             _Engine.Attach(Nodes, Edges);
+
+            _Timer = new DispatcherTimer();
+            _Timer.Interval = TimeSpan.FromMilliseconds(20);
+            _Timer.Tick += Tick;
+            _Timer.Start();
         }
 
         #region Properties
@@ -37,7 +50,7 @@ namespace WickedSick.KineticGraph.Controls
         {
             var kgc = d as Graph;
             if (kgc != null)
-                kgc.OnNodesSourceChanged((IEnumerable<ILinkable>)args.NewValue, (IEnumerable<ILinkable>)args.OldValue);
+                kgc.OnNodesSourceChanged((IEnumerable<ILinkable>)args.OldValue, (IEnumerable<ILinkable>)args.NewValue);
         }
 
         private void OnNodesSourceChanged(IEnumerable<ILinkable> oldEnumerable, IEnumerable<ILinkable> newEnumerable)
@@ -94,7 +107,7 @@ namespace WickedSick.KineticGraph.Controls
         {
             var kgc = d as Graph;
             if (kgc != null)
-                kgc.OnEdgesSourceChanged((IEnumerable<IEdge>)args.NewValue, (IEnumerable<IEdge>)args.OldValue);
+                kgc.OnEdgesSourceChanged((IEnumerable<IEdge>)args.OldValue, (IEnumerable<IEdge>)args.NewValue);
         }
 
         private void OnEdgesSourceChanged(IEnumerable<IEdge> oldEnumerable, IEnumerable<IEdge> newEnumerable)
@@ -139,10 +152,37 @@ namespace WickedSick.KineticGraph.Controls
 
         #endregion
 
+        private void Tick(object sender, EventArgs e)
+        {
+            _Engine.Step();
+            UpdateVisuals();
+        }
+
+        private DateTime _LastVisualTick = DateTime.MinValue;
+        private void UpdateVisuals()
+        {
+            var now = DateTime.Now;
+            if ((now - _LastVisualTick).TotalMilliseconds < MAX_MSPF)
+                return;
+            _LastVisualTick = now;
+
+            foreach (var node in Nodes)
+            {
+                node.UpdatePosition();
+            }
+
+            foreach (var edge in Edges)
+            {
+                edge.UpdatePosition();
+            }
+        }
+
         #region Node Management
 
         private void AddNodes(IEnumerable<ILinkable> newLinkables)
         {
+            if (newLinkables == null)
+                return;
             foreach (var linkable in newLinkables.Where(l => !Nodes.Any(n => n.Linkable.UniqueID == l.UniqueID)))
             {
                 FindOrAddNode(linkable);
@@ -159,11 +199,15 @@ namespace WickedSick.KineticGraph.Controls
         {
             var node = new Node { Linkable = newLinkable, };
             Nodes.Add(node);
+            Children.Add(node);
+            node.PhysicalState.Position = GetRandomPoint();
             return node;
         }
 
         private void RemoveNodes(IEnumerable<ILinkable> oldLinkables)
         {
+            if (oldLinkables == null)
+                return;
             foreach (var linkable in oldLinkables)
                 RemoveNode(linkable);
         }
@@ -172,6 +216,7 @@ namespace WickedSick.KineticGraph.Controls
             var existing = Nodes.FirstOrDefault(n => n.Linkable.UniqueID == oldLinkable.UniqueID);
             if (existing == null)
                 return;
+            Children.Remove(existing);
             Nodes.Remove(existing);
         }
 
@@ -181,6 +226,8 @@ namespace WickedSick.KineticGraph.Controls
 
         private void AddEdges(IEnumerable<IEdge> newEdges)
         {
+            if (newEdges == null)
+                return;
             foreach (var ie in newEdges)
                 FindOrAddEdge(ie);
         }
@@ -195,11 +242,14 @@ namespace WickedSick.KineticGraph.Controls
         {
             var edge = new Edge { Source = FindOrAddNode(newEdge.Source), Sink = FindOrAddNode(newEdge.Sink), };
             Edges.Add(edge);
+            Children.Add(edge);
             return edge;
         }
 
         private void RemoveEdges(IEnumerable<IEdge> oldEdges)
         {
+            if (oldEdges == null)
+                return;
             foreach (var ie in oldEdges)
                 RemoveEdge(ie);
         }
@@ -208,9 +258,15 @@ namespace WickedSick.KineticGraph.Controls
             var existing = Edges.FirstOrDefault(e => e.Source.Linkable.UniqueID == edge.Source.UniqueID && e.Sink.Linkable.UniqueID == edge.Sink.UniqueID);
             if (existing == null)
                 return;
+            Children.Remove(existing);
             Edges.Remove(existing);
         }
 
         #endregion
+
+        private Point GetRandomPoint()
+        {
+            return new Point(_Randomizer.Next(0, Convert.ToInt32(ActualWidth)), _Randomizer.Next(0, Convert.ToInt32(ActualHeight)));
+        }
     }
 }

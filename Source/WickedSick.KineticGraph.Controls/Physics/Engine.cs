@@ -70,9 +70,8 @@ namespace WickedSick.KineticGraph.Controls.Physics
 
             for (int i = 0; i < _Nodes.Count; i++)
             {
-                var state = _Nodes[i].PhysicalState;
-                state.Force.X = 0;
-                state.Force.Y = 0;
+                _Nodes[i].PhysicalState.Force.X = 0;
+                _Nodes[i].PhysicalState.Force.Y = 0;
             }
 
             for (int i = 0; i < _Nodes.Count; i++)
