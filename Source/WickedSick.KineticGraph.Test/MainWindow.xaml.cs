@@ -43,7 +43,7 @@ namespace WickedSick.KineticGraph.Test
             vm.Edges.Add(nc.Connect(tennesse));
         }
 
-        private void Grid_MouseLeftButtonDown_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void AddNode_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as TestViewModel;
 
@@ -51,10 +51,10 @@ namespace WickedSick.KineticGraph.Test
             vm.Nodes.Add(newNode);
 
             var newEdges = new List<TestEdge>();
-            var randomCount = _Randomizer.Next(1, vm.Nodes.Count);
+            var randomCount = _Randomizer.Next(1, 4);
             for (int i = 0; i < randomCount; i++)
             {
-                var existingNode = vm.Nodes[ _Randomizer.Next(0, vm.Nodes.Count)];
+                var existingNode = vm.Nodes[_Randomizer.Next(0, 3)];
                 if (newEdges.Any(te => te.Source.UniqueID == existingNode.UniqueID || te.Sink.UniqueID == existingNode.UniqueID))
                 {
                     i--;
@@ -68,6 +68,26 @@ namespace WickedSick.KineticGraph.Test
 
             foreach (var edge in newEdges)
                 vm.Edges.Add(edge);
+        }
+
+        private void DecreaseSpring_Click(object sender, RoutedEventArgs e)
+        {
+            Graph.SpringTension -= 0.0001;
+        }
+
+        private void IncreaseSpring_Click(object sender, RoutedEventArgs e)
+        {
+            Graph.SpringTension += 0.0001;
+        }
+
+        private void DecreaseRepulsion_Click(object sender, RoutedEventArgs e)
+        {
+            Graph.Repulsion -= 10.0;
+        }
+
+        private void IncreaseRepulsion_Click(object sender, RoutedEventArgs e)
+        {
+            Graph.Repulsion += 10.0;
         }
     }
 }

@@ -150,6 +150,68 @@ namespace WickedSick.KineticGraph.Controls
 
         #endregion
 
+        #region RepulsionProperty
+
+        public static readonly DependencyProperty RepulsionProperty = DependencyProperty.Register(
+            "Repulsion", typeof(double), typeof(Graph), new PropertyMetadata(300.0, RepulsionPropertyChanged, RepulsionCoercer));
+
+        public double Repulsion
+        {
+            get { return (double)GetValue(RepulsionProperty); }
+            set { SetValue(RepulsionProperty, value); }
+        }
+
+        private static void RepulsionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is Graph)
+                (d as Graph).RepulsionChanged((double)args.OldValue, (double)args.NewValue);
+        }
+
+        protected virtual void RepulsionChanged(double oldRepulsion, double newRepulsion)
+        {
+            _Engine.Repulsion = newRepulsion;
+            _Engine.Disturb();
+        }
+
+        private static object RepulsionCoercer(DependencyObject d, object value)
+        {
+            var st = (double)value;
+            return Math.Max(st, 10.0);
+        }
+
+        #endregion
+
+        #region SpringTensionProperty
+
+        public static readonly DependencyProperty SpringTensionProperty = DependencyProperty.Register(
+            "SpringTension", typeof(double), typeof(Graph), new PropertyMetadata(0.0009, SpringTensionPropertyChanged, SpringTensionCoercer));
+
+        public double SpringTension
+        {
+            get { return (double)GetValue(SpringTensionProperty); }
+            set { SetValue(SpringTensionProperty, value); }
+        }
+
+        private static void SpringTensionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            if (d is Graph)
+                (d as Graph).SpringTensionChanged((double)args.OldValue, (double)args.NewValue);
+        }
+
+        protected virtual void SpringTensionChanged(double oldSpringTension, double newSpringTension)
+        {
+            _Engine.SpringTension = newSpringTension;
+            _Engine.Disturb();
+        }
+
+        private static object SpringTensionCoercer(DependencyObject d, object value)
+        {
+            var st = (double)value;
+            return Math.Max(st, 0.0001);
+        }
+
+        #endregion
+
         #endregion
 
         private void Tick(object sender, EventArgs e)
@@ -200,6 +262,7 @@ namespace WickedSick.KineticGraph.Controls
             var node = new Node { Linkable = newLinkable, };
             Nodes.Add(node);
             Children.Add(node);
+            node.ManualMovement += node_ManualMovement;
             node.PhysicalState.Position = GetRandomPoint();
             _Engine.Disturb();
             return node;
@@ -217,8 +280,14 @@ namespace WickedSick.KineticGraph.Controls
             var existing = Nodes.FirstOrDefault(n => n.Linkable.UniqueID == oldLinkable.UniqueID);
             if (existing == null)
                 return;
+            existing.ManualMovement -= node_ManualMovement;
             Children.Remove(existing);
             Nodes.Remove(existing);
+            _Engine.Disturb();
+        }
+
+        private void node_ManualMovement(object sender, EventArgs e)
+        {
             _Engine.Disturb();
         }
 
@@ -243,6 +312,8 @@ namespace WickedSick.KineticGraph.Controls
         private Edge AddEdge(IEdge newEdge)
         {
             var edge = new Edge { Source = FindOrAddNode(newEdge.Source), Sink = FindOrAddNode(newEdge.Sink), };
+            if (edge.Source.Linkable.UniqueID == edge.Sink.Linkable.UniqueID)
+                return null;
             Edges.Add(edge);
             Children.Add(edge);
             _Engine.Disturb();

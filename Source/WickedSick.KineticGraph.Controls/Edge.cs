@@ -16,7 +16,7 @@ namespace WickedSick.KineticGraph.Controls
 
         public Edge()
         {
-            _Line = new Line { StrokeThickness = 2, Stroke = new SolidColorBrush(Colors.Black) };
+            _Line = new Line { StrokeThickness = 1, Stroke = new SolidColorBrush(Colors.Black) };
             Children.Add(_Line);
 
             _Triangle = BuildTriangle(5, 9);
