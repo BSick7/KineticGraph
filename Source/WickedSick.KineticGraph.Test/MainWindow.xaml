@@ -11,16 +11,15 @@
         </Grid.ColumnDefinitions>
         <StackPanel>
             <Button Content="Add Node" Margin="5" Command="{Binding AddNodeCommand}" />
-            <!--
             <Button Content="Decrease Spring" Click="DecreaseSpring_Click" />
             <Button Content="Increase Spring" Click="IncreaseSpring_Click" />
 
             <Button Content="Decrease Repulsion" Click="DecreaseRepulsion_Click" />
             <Button Content="Increase Repulsion" Click="IncreaseRepulsion_Click" />
-            -->
         </StackPanel>
         <Border Grid.Column="1">
-            <kgcontrols:Graph x:Name="Graph" NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}" />
+            <kgcontrols:Graph x:Name="Graph" NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}" 
+                              Repulsion="{Binding Repulsion}" SpringTension="{Binding SpringTension}" />
         </Border>
     </Grid>
 </Window>

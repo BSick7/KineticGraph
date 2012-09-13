@@ -31,7 +31,7 @@ namespace WickedSick.KineticGraph.Test.ViewModels
             }
         }
 
-        private double _Repulsion;
+        private double _Repulsion = 300.0;
         public double Repulsion
         {
             get { return _Repulsion; }
@@ -42,7 +42,7 @@ namespace WickedSick.KineticGraph.Test.ViewModels
             }
         }
 
-        private double _SpringTension;
+        private double _SpringTension = 0.0009;
         public double SpringTension
         {
             get { return _SpringTension; }
