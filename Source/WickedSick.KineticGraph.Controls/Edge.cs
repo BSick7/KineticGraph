@@ -51,6 +51,8 @@ namespace WickedSick.KineticGraph.Controls
         private void SetCoordinates(Point a, Point b)
         {
             double theta = GetLineAngle(a, b);
+            if (double.IsNaN(theta))
+                return;
             double thetaRad = theta * (Math.PI / 180);
             //double thetaRev = thetaRad - (Math.PI*2.0);
 

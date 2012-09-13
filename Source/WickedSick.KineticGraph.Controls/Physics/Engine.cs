@@ -57,7 +57,7 @@ namespace WickedSick.KineticGraph.Controls.Physics
                 _KE = ApplyForces();
                 _IsGraphDisturbed = false;
             }
-            else
+            else if (!IsGraphStabilized)
             {
                 IsGraphStabilized = true;
                 OnGraphStabilized();

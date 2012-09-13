@@ -28,6 +28,8 @@ namespace WickedSick.KineticGraph.Controls.Physics
             double dx = a.Position.X - b.Position.X;
             double dy = a.Position.Y - b.Position.Y;
             double sqDist = dx * dx + dy * dy;
+            if (sqDist == 0)
+                return;
             double d = Math.Sqrt(sqDist);
 
             double mag = 1.0 / sqDist; // Force magnitude
