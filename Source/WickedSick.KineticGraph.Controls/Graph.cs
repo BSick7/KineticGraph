@@ -5,12 +5,13 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 using WickedSick.KineticGraph.Controls.Physics;
 
 namespace WickedSick.KineticGraph.Controls
 {
-    public class Graph : Canvas
+    public class Graph : Grid
     {
         private Random _Randomizer = new Random();
 
@@ -20,6 +21,10 @@ namespace WickedSick.KineticGraph.Controls
 
         private DispatcherTimer _Timer;
 
+        private Canvas _Surface;
+        private ScaleTransform _CanvasScale;
+        private TranslateTransform _CanvasTranslate;
+
         public Graph()
         {
             _Engine.Attach(Nodes, Edges);
@@ -28,6 +33,17 @@ namespace WickedSick.KineticGraph.Controls
             _Timer.Interval = TimeSpan.FromMilliseconds(20);
             _Timer.Tick += Tick;
             _Timer.Start();
+
+            _Surface = new Canvas();
+            Children.Add(_Surface);
+            ResetMovement();
+            
+            Background = new SolidColorBrush(Colors.Transparent);
+
+            MouseLeftButtonDown += Graph_MouseLeftButtonDown;
+            MouseLeftButtonUp += Graph_MouseLeftButtonUp;
+            MouseMove += Graph_MouseMove;
+            LostMouseCapture += Graph_LostMouseCapture;
         }
 
         #region Properties
@@ -235,6 +251,67 @@ namespace WickedSick.KineticGraph.Controls
 
         #endregion
 
+        public void ResetMovement()
+        {
+            var tg = new TransformGroup();
+            _CanvasScale = new ScaleTransform();
+            tg.Children.Add(_CanvasScale);
+            _CanvasTranslate = new TranslateTransform();
+            tg.Children.Add(_CanvasTranslate);
+            _Surface.RenderTransform = tg;
+        }
+
+        public void Center()
+        {
+            var nodes = Nodes.ToList();
+            var count = nodes.Count;
+            var totX = 0.0;
+            var totY = 0.0;
+            foreach (var node in nodes)
+            {
+                totX += node.PhysicalState.Position.X;
+                totY += node.PhysicalState.Position.Y;
+            }
+            _CanvasTranslate.X = (ActualWidth / 2) - (totX / count);
+            _CanvasTranslate.Y = (ActualHeight / 2) - (totY / count);
+        }
+
+        #region Dragging
+
+        private Point _LastPos;
+        private bool _IsDragging;
+        private void Graph_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+            e.Handled = _IsDragging = CaptureMouse();
+            _LastPos = e.GetPosition(this);
+        }
+
+        private void Graph_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (_IsDragging)
+            {
+                var curPos = e.GetPosition(this);
+                var delta = new Point(curPos.X - _LastPos.X, curPos.Y - _LastPos.Y);
+                _CanvasTranslate.X += delta.X;
+                _CanvasTranslate.Y += delta.Y;
+                _LastPos = curPos;
+            }
+        }
+
+        private void Graph_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ReleaseMouseCapture();
+        }
+
+        private void Graph_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            _IsDragging = false;
+        }
+
+        #endregion
+
         private void Tick(object sender, EventArgs e)
         {
             _Engine.Step();
@@ -282,7 +359,7 @@ namespace WickedSick.KineticGraph.Controls
         {
             var node = new Node { Linkable = newLinkable, };
             Nodes.Add(node);
-            Children.Add(node);
+            _Surface.Children.Add(node);
             node.ManualMovement += node_ManualMovement;
             node.PhysicalState.Position = GetRandomPoint();
             _Engine.Disturb();
@@ -302,7 +379,7 @@ namespace WickedSick.KineticGraph.Controls
             if (existing == null)
                 return;
             existing.ManualMovement -= node_ManualMovement;
-            Children.Remove(existing);
+            _Surface.Children.Remove(existing);
             Nodes.Remove(existing);
             _Engine.Disturb();
         }
@@ -336,7 +413,7 @@ namespace WickedSick.KineticGraph.Controls
             if (edge.Source.Linkable.UniqueID == edge.Sink.Linkable.UniqueID)
                 return null;
             Edges.Add(edge);
-            Children.Add(edge);
+            _Surface.Children.Add(edge);
             _Engine.Disturb();
             return edge;
         }
@@ -353,7 +430,7 @@ namespace WickedSick.KineticGraph.Controls
             var existing = Edges.FirstOrDefault(e => e.Source.Linkable.UniqueID == edge.Source.UniqueID && e.Sink.Linkable.UniqueID == edge.Sink.UniqueID);
             if (existing == null)
                 return;
-            Children.Remove(existing);
+            _Surface.Children.Remove(existing);
             Edges.Remove(existing);
             _Engine.Disturb();
         }

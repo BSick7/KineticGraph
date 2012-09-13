@@ -12,6 +12,11 @@ namespace WickedSick.KineticGraph.Test
             InitializeComponent();
         }
 
+        private void Center_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Graph.Center();
+        }
+
         private void DecreaseSpring_Click(object sender, RoutedEventArgs e)
         {
             Graph.SpringTension -= 0.0001;

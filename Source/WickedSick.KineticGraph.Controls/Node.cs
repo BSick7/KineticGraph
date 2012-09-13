@@ -45,11 +45,10 @@ namespace WickedSick.KineticGraph.Controls
         private bool _IsDragging;
         private void Node_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            PhysicalState.IsFrozen = true;
-            _IsDragging = true;
+            if (e.Handled)
+                return;
+            e.Handled = PhysicalState.IsFrozen = _IsDragging = CaptureMouse();
             _LastPos = e.GetPosition(VisualParent as UIElement);
-            CaptureMouse();
-            e.Handled = true;
         }
 
         private void Node_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

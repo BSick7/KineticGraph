@@ -9,8 +9,9 @@
             <ColumnDefinition Width="100" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <StackPanel>
-            <Button Content="Add Node" Margin="5" Command="{Binding AddNodeCommand}" />
+        <StackPanel Margin="5">
+            <Button Content="Add Node" Margin="0,0,0,5" Command="{Binding AddNodeCommand}" />
+            <Button Content="Center" Margin="0,0,0,5" Click="Center_Click" />
             <Button Content="Decrease Spring" Click="DecreaseSpring_Click" />
             <Button Content="Increase Spring" Click="IncreaseSpring_Click" />
 

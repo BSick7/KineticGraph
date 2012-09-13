@@ -9,8 +9,9 @@
             <ColumnDefinition Width="100" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <StackPanel>
-            <Button Content="Add Node" Margin="5" Command="{Binding AddNodeCommand}" />
+        <StackPanel Margin="5">
+            <Button Content="Add Node" Margin="0,0,0,5" Command="{Binding AddNodeCommand}" />
+            <Button Content="Center" Margin="0,0,0,5" Click="Center_Click" />
             <TextBlock Text="Spring Tension: " />
             <input:NumericUpDown Value="{Binding Path=SpringTension, Mode=TwoWay}" Increment="0.0001" Minimum="0.00011" Maximum="1.0" DecimalPlaces="4" />
             <TextBlock Text="Repulsion: " />

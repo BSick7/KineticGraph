@@ -8,5 +8,10 @@ namespace WickedSick.KineticGraph.Test.Silverlight
         {
             InitializeComponent();
         }
+
+        private void Center_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Graph.Center();
+        }
     }
 }
