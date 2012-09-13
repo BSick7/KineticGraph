@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -23,7 +26,57 @@ namespace WickedSick.KineticGraph.Controls
         {
             PhysicalState = new NodeState();
             Children.Add(_Circle);
+            MouseLeftButtonDown += Node_MouseLeftButtonDown;
+            MouseLeftButtonUp += Node_MouseLeftButtonUp;
+            MouseMove += Node_MouseMove;
+            LostMouseCapture += Node_LostMouseCapture;
         }
+
+        #region Dragging
+
+        private Point _LastPos;
+        private bool _IsDragging;
+        private void Node_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            PhysicalState.IsFrozen = true;
+            _IsDragging = true;
+            _LastPos = e.GetPosition(VisualParent as UIElement);
+            CaptureMouse();
+            e.Handled = true;
+        }
+
+        private void Node_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (_IsDragging)
+            {
+                var curPos = e.GetPosition(VisualParent as UIElement);
+                var delta = curPos - _LastPos;
+                PhysicalState.Position += delta;
+                _LastPos = curPos;
+            }
+        }
+
+        private void Node_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ReleaseMouseCapture();
+        }
+
+        private void Node_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            PhysicalState.IsFrozen = false;
+            _IsDragging = false;
+            OnManualMovement();
+        }
+
+        public event EventHandler ManualMovement;
+        protected virtual void OnManualMovement()
+        {
+            var obj = ManualMovement;
+            if (obj != null)
+                obj(this, new EventArgs());
+        }
+
+        #endregion
 
         public double Radius
         {

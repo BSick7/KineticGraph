@@ -7,6 +7,6 @@ namespace WickedSick.KineticGraph.Controls
         public Point Position;
         public Point Velocity;
         public Point Force;
-        public bool IsBeingDragged;
+        public bool IsFrozen;
     }
 }

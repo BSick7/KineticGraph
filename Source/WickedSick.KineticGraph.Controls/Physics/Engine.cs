@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WickedSick.KineticGraph.Controls.Physics
 {
@@ -14,6 +15,9 @@ namespace WickedSick.KineticGraph.Controls.Physics
         public bool IsGraphStabilized { get; protected set; }
         public double KineticEnergy { get { return _KE; } }
         public double AverageKineticEnergy { get { return _KE / _Nodes.Count; } }
+
+        internal double Repulsion = 300.0;
+        internal double SpringTension = 0.9 * 0.001;
 
         private IList<Node> _Nodes;
         private IList<Edge> _Edges;
@@ -66,8 +70,6 @@ namespace WickedSick.KineticGraph.Controls.Physics
             const double dT = 0.95;
             const double damping = 0.90;
 
-            const double hookeAttraction = 0.9 * 0.001;
-
             for (int i = 0; i < _Nodes.Count; i++)
             {
                 _Nodes[i].PhysicalState.Force.X = 0;
@@ -76,10 +78,8 @@ namespace WickedSick.KineticGraph.Controls.Physics
 
             for (int i = 0; i < _Nodes.Count; i++)
             {
-                var node = _Nodes[i];
-                var state = node.PhysicalState;
-
-                if (state.IsBeingDragged)
+                var state = _Nodes[i].PhysicalState;
+                if (state.IsFrozen)
                     continue;
 
                 //Coulomb repulsion against every other node
@@ -93,45 +93,24 @@ namespace WickedSick.KineticGraph.Controls.Physics
                      * In a nutshell, lots of connected nodes --> more repulsion.
                      * Increasing repulsion initial value will increase separation of a cluster.
                      */
-                    double repulsion = 300.0;
-                    repulsion *= Math.Log(other.Degree + 2, 2);
-
-                    ForceHelper.ApplyCoulombRepulsion(state, otherState, repulsion, !otherState.IsBeingDragged);
+                    var repulsion = Repulsion * Math.Log(other.Degree + 2, 2);
+                    ForceHelper.ApplyCoulombRepulsion(state, otherState, repulsion);
                 }
-
-                /*
-                
-                //Hooke's attraction with every connected node
-                foreach (DirectedEdge edge in node.ChildEdges)
-                {
-                    
-                    NodeState other = NodeStateFromGuid(edge.Sink.ID);
-                    if (other == null)
-                        continue;
-                    ForceHelper.ApplyHookeAttraction(state.Position, other.Position, hookeAttraction, ref state.Force);
-                }
-                foreach (DirectedEdge edge in node.ParentEdges)
-                {
-                    NodeState other = NodeStateFromGuid(edge.Source.ID);
-                    if (other == null)
-                        continue;
-                    ForceHelper.ApplyHookeAttraction(state.Position, other.Position, hookeAttraction, ref state.Force);
-                }
-                
-                */
-
             }
             
             //Hooke's attraction with every connected node
             for (int i = 0; i < _Edges.Count; i++)
             {
                 var edge = _Edges[i];
-                ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, hookeAttraction);
+                ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, SpringTension);
             }
 
+            var nodes = _Nodes.Where(n => n.PhysicalState.IsFrozen).ToList();
             for (int i = 0; i < _Nodes.Count; i++)
             {
                 var state = _Nodes[i].PhysicalState;
+                if (state.IsFrozen)
+                    continue;
                 // Update velocity
                 state.Velocity.X = (state.Force.X * dT + state.Velocity.X) * damping;
                 state.Velocity.Y = (state.Force.Y * dT + state.Velocity.Y) * damping;
@@ -154,11 +133,24 @@ namespace WickedSick.KineticGraph.Controls.Physics
             _IsGraphDisturbed = true;
         }
 
+        #region Graph Stabilization Events
+
+        public event EventHandler GraphStabilizing;
         protected virtual void OnGraphStabilizing()
         {
+            var obj = GraphStabilizing;
+            if (obj != null)
+                obj(this, new EventArgs());
         }
+
+        public event EventHandler GraphStabilized;
         protected virtual void OnGraphStabilized()
         {
+            var obj = GraphStabilized;
+            if (obj != null)
+                obj(this, new EventArgs());
         }
+
+        #endregion
     }
 }
