@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using WickedSick.KineticGraph.Controls;
 
-namespace WickedSick.KineticGraph.Test
+namespace WickedSick.KineticGraph.Test.ViewModels
 {
     public class TestNode : ILinkable
     {

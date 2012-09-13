@@ -1,13 +1,11 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 
-namespace WickedSick.KineticGraph.Test
+namespace WickedSick.KineticGraph.Test.Silverlight
 {
-    public partial class MainWindow : Window
+    public partial class MainPage : UserControl
     {
-        private Random _Randomizer = new Random();
-
-        public MainWindow()
+        public MainPage()
         {
             InitializeComponent();
         }

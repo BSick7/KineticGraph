@@ -53,9 +53,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TestEdge.cs" />
-    <Compile Include="TestNode.cs" />
-    <Compile Include="TestViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,6 +94,10 @@
     <ProjectReference Include="..\WickedSick.KineticGraph.Controls\WickedSick.KineticGraph.Controls.csproj">
       <Project>{4884c128-de69-4c56-9eea-4f9ebd6b8820}</Project>
       <Name>WickedSick.KineticGraph.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WickedSick.KineticGraph.Test.ViewModels\WickedSick.KineticGraph.Test.ViewModels.csproj">
+      <Project>{c5d67f63-1bab-4fcf-a7b7-b0bcbcabf021}</Project>
+      <Name>WickedSick.KineticGraph.Test.ViewModels</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

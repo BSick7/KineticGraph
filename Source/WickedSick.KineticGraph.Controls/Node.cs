@@ -32,6 +32,13 @@ namespace WickedSick.KineticGraph.Controls
             LostMouseCapture += Node_LostMouseCapture;
         }
 
+#if SILVERLIGHT
+        public DependencyObject VisualParent
+        {
+            get { return VisualTreeHelper.GetParent(this); }
+        }
+#endif
+
         #region Dragging
 
         private Point _LastPos;
@@ -50,8 +57,9 @@ namespace WickedSick.KineticGraph.Controls
             if (_IsDragging)
             {
                 var curPos = e.GetPosition(VisualParent as UIElement);
-                var delta = curPos - _LastPos;
-                PhysicalState.Position += delta;
+                var delta = new Point(curPos.X - _LastPos.X, curPos.Y - _LastPos.Y);
+                PhysicalState.Position.X += delta.X;
+                PhysicalState.Position.Y += delta.Y;
                 _LastPos = curPos;
             }
         }

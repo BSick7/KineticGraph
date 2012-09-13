@@ -5,6 +5,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test", "WickedSick.KineticGraph.Test\WickedSick.KineticGraph.Test.csproj", "{9CE042B4-CFE6-4F11-9B62-FAF5AF04FA6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Controls.Silverlight", "WickedSick.KineticGraph.Controls.Silverlight\WickedSick.KineticGraph.Controls.Silverlight.csproj", "{D4D75722-AA18-405A-A729-01002347D21A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test.Silverlight", "WickedSick.KineticGraph.Test.Silverlight\WickedSick.KineticGraph.Test.Silverlight.csproj", "{E058D664-47B1-45C6-85E6-392CBC92BD57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test.ViewModels.Silverlight", "WickedSick.KineticGraph.Test.ViewModels.Silverlight\WickedSick.KineticGraph.Test.ViewModels.Silverlight.csproj", "{5250929F-3CF0-4B00-BED4-BDBAF855739F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test.ViewModels", "WickedSick.KineticGraph.Test.ViewModels\WickedSick.KineticGraph.Test.ViewModels.csproj", "{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +27,22 @@ Global
 		{9CE042B4-CFE6-4F11-9B62-FAF5AF04FA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CE042B4-CFE6-4F11-9B62-FAF5AF04FA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CE042B4-CFE6-4F11-9B62-FAF5AF04FA6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4D75722-AA18-405A-A729-01002347D21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4D75722-AA18-405A-A729-01002347D21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4D75722-AA18-405A-A729-01002347D21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4D75722-AA18-405A-A729-01002347D21A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E058D664-47B1-45C6-85E6-392CBC92BD57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E058D664-47B1-45C6-85E6-392CBC92BD57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E058D664-47B1-45C6-85E6-392CBC92BD57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E058D664-47B1-45C6-85E6-392CBC92BD57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5250929F-3CF0-4B00-BED4-BDBAF855739F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5250929F-3CF0-4B00-BED4-BDBAF855739F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5250929F-3CF0-4B00-BED4-BDBAF855739F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5250929F-3CF0-4B00-BED4-BDBAF855739F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

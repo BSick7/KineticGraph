@@ -152,8 +152,21 @@ namespace WickedSick.KineticGraph.Controls
 
         #region RepulsionProperty
 
+#if SILVERLIGHT
+        protected const double MIN_ALLOWED_REPULSION = 10.0;
+
+        public static readonly DependencyProperty RepulsionProperty = DependencyProperty.Register(
+            "Repulsion", typeof(double), typeof(Graph), new PropertyMetadata(300.0, RepulsionPropertyChanged));
+#else
         public static readonly DependencyProperty RepulsionProperty = DependencyProperty.Register(
             "Repulsion", typeof(double), typeof(Graph), new PropertyMetadata(300.0, RepulsionPropertyChanged, RepulsionCoercer));
+        
+        private static object RepulsionCoercer(DependencyObject d, object value)
+        {
+            var st = (double)value;
+            return Math.Max(st, 10.0);
+        }
+#endif
 
         public double Repulsion
         {
@@ -169,22 +182,32 @@ namespace WickedSick.KineticGraph.Controls
 
         protected virtual void RepulsionChanged(double oldRepulsion, double newRepulsion)
         {
+#if SILVERLIGHT
+            if (newRepulsion < MIN_ALLOWED_REPULSION)
+                throw new ArgumentOutOfRangeException("Repulsion");
+#endif
             _Engine.Repulsion = newRepulsion;
             _Engine.Disturb();
-        }
-
-        private static object RepulsionCoercer(DependencyObject d, object value)
-        {
-            var st = (double)value;
-            return Math.Max(st, 10.0);
         }
 
         #endregion
 
         #region SpringTensionProperty
+#if SILVERLIGHT
+        protected const double MIN_ALLOWED_SPRING_TENSION = 0.0001;
 
         public static readonly DependencyProperty SpringTensionProperty = DependencyProperty.Register(
+            "SpringTension", typeof(double), typeof(Graph), new PropertyMetadata(0.0009, SpringTensionPropertyChanged));
+#else
+        public static readonly DependencyProperty SpringTensionProperty = DependencyProperty.Register(
             "SpringTension", typeof(double), typeof(Graph), new PropertyMetadata(0.0009, SpringTensionPropertyChanged, SpringTensionCoercer));
+
+        private static object SpringTensionCoercer(DependencyObject d, object value)
+        {
+            var st = (double)value;
+            return Math.Max(st, 0.0001);
+        }
+#endif
 
         public double SpringTension
         {
@@ -200,14 +223,12 @@ namespace WickedSick.KineticGraph.Controls
 
         protected virtual void SpringTensionChanged(double oldSpringTension, double newSpringTension)
         {
+#if SILVERLIGHT
+            if (newSpringTension < MIN_ALLOWED_SPRING_TENSION)
+                throw new ArgumentOutOfRangeException("SpringTension");
+#endif
             _Engine.SpringTension = newSpringTension;
             _Engine.Disturb();
-        }
-
-        private static object SpringTensionCoercer(DependencyObject d, object value)
-        {
-            var st = (double)value;
-            return Math.Max(st, 0.0001);
         }
 
         #endregion
@@ -341,7 +362,15 @@ namespace WickedSick.KineticGraph.Controls
 
         private Point GetRandomPoint()
         {
-            return new Point(_Randomizer.Next(0, Convert.ToInt32(ActualWidth)), _Randomizer.Next(0, Convert.ToInt32(ActualHeight)));
+            var width = Convert.ToInt32(ActualWidth);
+            if (width == 0)
+                width = 100;
+
+            var height = Convert.ToInt32(ActualHeight);
+            if (height == 0)
+                height = 100;
+
+            return new Point(_Randomizer.Next(0, width), _Randomizer.Next(0, height));
         }
     }
 }
