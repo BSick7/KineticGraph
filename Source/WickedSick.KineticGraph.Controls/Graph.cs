@@ -97,7 +97,7 @@ namespace WickedSick.KineticGraph.Controls
                     RemoveNodes(e.OldItems.OfType<ILinkable>());
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    RemoveNodes(e.OldItems.OfType<ILinkable>());
+                    ClearNodes();
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     AddNodes(e.NewItems.OfType<ILinkable>());
@@ -155,7 +155,7 @@ namespace WickedSick.KineticGraph.Controls
                     RemoveEdges(e.OldItems.OfType<IEdge>());
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    RemoveEdges(e.OldItems.OfType<IEdge>());
+                    ClearEdges();
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     AddEdges(e.NewItems.OfType<IEdge>());
@@ -383,6 +383,16 @@ namespace WickedSick.KineticGraph.Controls
             Nodes.Remove(existing);
             _Engine.Disturb();
         }
+        private void ClearNodes()
+        {
+            var nodes = Nodes.ToList();
+            foreach (var node in nodes)
+            {
+                _Surface.Children.Remove(node);
+                Nodes.Remove(node);
+            }
+            _Engine.Disturb();
+        }
 
         private void node_ManualMovement(object sender, EventArgs e)
         {
@@ -432,6 +442,16 @@ namespace WickedSick.KineticGraph.Controls
                 return;
             _Surface.Children.Remove(existing);
             Edges.Remove(existing);
+            _Engine.Disturb();
+        }
+        private void ClearEdges()
+        {
+            var edges = Edges.ToList();
+            foreach (var edge in edges)
+            {
+                _Surface.Children.Remove(edge);
+                Edges.Remove(edge);
+            }
             _Engine.Disturb();
         }
 
