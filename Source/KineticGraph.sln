@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Controls.Fayde", "WickedSick.KineticGraph.Controls.Fayde\WickedSick.KineticGraph.Controls.Fayde.csproj", "{B9A08A49-38C0-4B88-973A-B966BF15D63A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test.Fayde", "WickedSick.KineticGraph.Test.Fayde\WickedSick.KineticGraph.Test.Fayde.csproj", "{37D567D4-72AA-423A-AE03-707D03E5FBC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{B9A08A49-38C0-4B88-973A-B966BF15D63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9A08A49-38C0-4B88-973A-B966BF15D63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9A08A49-38C0-4B88-973A-B966BF15D63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37D567D4-72AA-423A-AE03-707D03E5FBC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37D567D4-72AA-423A-AE03-707D03E5FBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37D567D4-72AA-423A-AE03-707D03E5FBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37D567D4-72AA-423A-AE03-707D03E5FBC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

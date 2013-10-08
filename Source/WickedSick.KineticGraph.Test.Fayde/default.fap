@@ -1,0 +1,38 @@
+<Application
+    xmlns="http://schemas.wsick.com/fayde"
+    xmlns:x="http://schemas.wsick.com/fayde/x"
+    xmlns:vms="folder:ViewModels"
+    xmlns:kgcontrols="http://schemas.wsick.com/kineticgraph"
+    Theme="scripts/Theme.Metro.xml">
+    <Application.Sources>
+        <Namespace Name="http://schemas.wsick.com/kineticgraph">
+            <Source Name="Graph" Source="scripts/KineticGraph.js" />
+        </Namespace>
+        <Namespace Name="folder:ViewModels">
+            <Source Name="TestViewModel" Source="ViewModels/TestViewModel.js" />
+        </Namespace>
+    </Application.Sources>
+    <Application.Resources>
+    </Application.Resources>
+    <Grid Background="Transparent">
+        <Grid.DataContext>
+            <vms:TestViewModel />
+        </Grid.DataContext>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="5">
+            <Button Content="Add Node" Margin="0,0,0,5" Command="{Binding AddNodeCommand}" />
+            <Button Content="Center" Margin="0,0,0,5" />
+            <TextBlock Text="Spring Tension: " />
+            <!--<input:NumericUpDown Value="{Binding Path=SpringTension, Mode=TwoWay}" Increment="0.0001" Minimum="0.00011" Maximum="1.0" DecimalPlaces="4" />-->
+            <TextBlock Text="Repulsion: " />
+            <!--<input:NumericUpDown Value="{Binding Path=Repulsion, Mode=TwoWay}" Increment="10.0" Minimum="10.0" Maximum="1000.0" />-->
+        </StackPanel>
+        <Border Grid.Column="1">
+            <kgcontrols:Graph x:Name="Graph" NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}"
+                              Repulsion="{Binding Repulsion}" SpringTension="{Binding SpringTension}" />
+        </Border>
+    </Grid>
+</Application>

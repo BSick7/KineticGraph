@@ -12,11 +12,13 @@ module KineticGraph.Controls {
     var MIN_ALLOWED_REPULSION = 10.0;
     var MIN_ALLOWED_SPRING_TENSION = 0.0001;
 
-    export class Graph extends Fayde.Controls.Canvas {
+    export class Graph extends Fayde.Controls.Canvas implements Fayde.ITimerListener {
         private _Engine = new Physics.Engine();
 
         private _CanvasScale: Fayde.Media.ScaleTransform;
         private _CanvasTranslate: Fayde.Media.TranslateTransform;
+
+        private _Timer: Fayde.ClockTimer;
 
         private Nodes: NodeCanvas[] = [];
         private Edges: EdgeCanvas[] = [];
@@ -124,8 +126,15 @@ module KineticGraph.Controls {
             this.MouseLeftButtonUp.Subscribe(this.Graph_MouseLeftButtonUp, this);
             this.MouseMove.Subscribe(this.Graph_MouseMove, this);
             this.LostMouseCapture.Subscribe(this.Graph_LostMouseCapture, this);
+
+            this._Timer = new Fayde.ClockTimer();
+            this._Timer.RegisterTimer(this);
         }
 
+        OnTicked(lastTime: number, nowTime: number) {
+            this._Engine.Step();
+            this.UpdateVisuals();
+        }
 
         private _LastPos: Point = null;
         private _IsDragging = false;

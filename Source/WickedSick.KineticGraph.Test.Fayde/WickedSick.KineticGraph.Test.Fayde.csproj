@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B9A08A49-38C0-4B88-973A-B966BF15D63A}</ProjectGuid>
+    <ProjectGuid>{37D567D4-72AA-423A-AE03-707D03E5FBC2}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WickedSick.KineticGraph.Controls.Fayde</RootNamespace>
-    <AssemblyName>WickedSick.KineticGraph.Controls.Fayde</AssemblyName>
+    <RootNamespace>WickedSick.KineticGraph.Test.Fayde</RootNamespace>
+    <AssemblyName>WickedSick.KineticGraph.Test.Fayde</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -28,10 +28,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptOutFile>KineticGraph.js</TypeScriptOutFile>
-    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,32 +39,49 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptOutFile>KineticGraph.js</TypeScriptOutFile>
-    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="KineticGraph.d.ts" />
-    <Content Include="KineticGraph.js" />
-    <TypeScriptCompile Include="Physics\Engine.ts" />
-    <TypeScriptCompile Include="Physics\ForceHelper.ts" />
-    <TypeScriptCompile Include="Graph.ts" />
-    <TypeScriptCompile Include="NodeCanvas.ts" />
-    <TypeScriptCompile Include="EdgeCanvas.ts" />
-    <TypeScriptCompile Include="ILinkable.ts" />
-    <TypeScriptCompile Include="ILinkableEdge.ts" />
-    <Content Include="Fayde.d.ts" />
+    <Content Include="default.html" />
+    <Content Include="scripts\Fayde.d.ts" />
+    <Content Include="scripts\Fayde.js" />
+    <Content Include="scripts\KineticGraph.d.ts" />
+    <Content Include="scripts\KineticGraph.js" />
+    <Content Include="scripts\Theme.Metro.xml" />
+    <Content Include="scripts\Theme.Silverlight.xml" />
+    <TypeScriptCompile Include="ViewModels\TestViewModel.ts" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="KineticGraph.js.map" />
+    <Content Include="default.fap" />
+    <Content Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -83,7 +98,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:40687/</IISUrl>
+          <IISUrl>http://localhost:41701/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -93,11 +108,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /s /y "$(ProjectDir)KineticGraph.js" "$(SolutionDir)WickedSick.KineticGraph.Test.Fayde\scripts\"
-xcopy /s /y "$(ProjectDir)KineticGraph.d.ts" "$(SolutionDir)WickedSick.KineticGraph.Test.Fayde\scripts\"</PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\Fayde.0.9.6.0\build\Fayde.targets" Condition="Exists('..\packages\Fayde.0.9.6.0\build\Fayde.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

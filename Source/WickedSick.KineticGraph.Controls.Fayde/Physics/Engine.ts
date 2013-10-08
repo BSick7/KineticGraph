@@ -32,8 +32,8 @@ module KineticGraph.Controls.Physics {
         Repulsion = 300.0;
         SpringTension = 0.9 * 0.001;
 
-        GraphStabilized: MulticastEvent<EventArgs>;
-        GraphStabilizing: MulticastEvent<EventArgs>;
+        GraphStabilized = new MulticastEvent<EventArgs>();
+        GraphStabilizing = new MulticastEvent<EventArgs>();
 
         Attach(nodes: INode[], edges: IEdge[]) {
             this._Nodes = nodes;
