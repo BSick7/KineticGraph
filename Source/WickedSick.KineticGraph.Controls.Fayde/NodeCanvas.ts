@@ -12,11 +12,11 @@ module KineticGraph.Controls {
     }
 
     export class NodeCanvas extends Fayde.Controls.Canvas implements Physics.INode {
-        Linkable: ILinkable;
+        Linkable: ILinkable = null;
         PhysicalState: Physics.INodeState;
-        Degree: number;
+        Degree: number = 1.0;
 
-        Graph: Graph;
+        Graph: Graph = null;
 
         private _Circle = new Fayde.Shapes.Ellipse();
 
@@ -72,7 +72,7 @@ module KineticGraph.Controls {
             Fayde.Controls.Canvas.SetTop(this, this.PhysicalState.Position.Y - (this._Circle.ActualHeight / 2));
         }
 
-        private _LastPos: Point;
+        private _LastPos: Point = null;
         private _IsDragging = false;
         private Node_MouseLeftButtonDown(sender: any, e: Fayde.Input.MouseButtonEventArgs) {
             if (e.Handled)
@@ -98,4 +98,8 @@ module KineticGraph.Controls {
             this.ManualMovement.Raise(this, EventArgs.Empty);
         }
     }
+    Fayde.RegisterType(NodeCanvas, {
+        Name: "NodeCanvas",
+        Namespace: "KineticGraph.Controls"
+    });
 }

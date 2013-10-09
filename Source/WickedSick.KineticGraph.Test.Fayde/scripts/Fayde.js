@@ -17258,12 +17258,12 @@ var Fayde;
             });
             ScaleTransform.ScaleXProperty = DependencyProperty.Register("ScaleX", function () {
                 return Number;
-            }, ScaleTransform, 0, function (d, args) {
+            }, ScaleTransform, 1.0, function (d, args) {
                 return (d)._InvalidateValue();
             });
             ScaleTransform.ScaleYProperty = DependencyProperty.Register("ScaleY", function () {
                 return Number;
-            }, ScaleTransform, 0, function (d, args) {
+            }, ScaleTransform, 1.0, function (d, args) {
                 return (d)._InvalidateValue();
             });
             return ScaleTransform;

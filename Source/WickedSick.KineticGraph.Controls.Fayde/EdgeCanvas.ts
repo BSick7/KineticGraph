@@ -78,6 +78,10 @@ module KineticGraph.Controls {
             this._Triangle.RenderTransform = tg;
         }
     }
+    Fayde.RegisterType(EdgeCanvas, {
+        Name: "EdgeCanvas",
+        Namespace: "KineticGraph.Controls"
+    });
 
     function buildTriangle(width: number, height: number): Fayde.Shapes.Polygon {
         var p = new Fayde.Shapes.Polygon();

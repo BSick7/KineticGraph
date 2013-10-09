@@ -14,11 +14,10 @@ module KineticGraph.Controls.Physics {
         Sink: INode;
     }
 
-    var totalKE = 0.0;
     var dT = 0.95;
     var damping = 0.90;
     var KE_THRESHOLD = 0.001;
-    var numIterations = 15;
+    var numIterations = 1;
 
     export class Engine {
         private _KE: number = Number.POSITIVE_INFINITY;
@@ -67,6 +66,7 @@ module KineticGraph.Controls.Physics {
             }
         }
         ApplyForces() {
+            var totalKE = 0.0;
             var nodes = this._Nodes;
             var edges = this._Edges;
 
@@ -101,9 +101,9 @@ module KineticGraph.Controls.Physics {
                 ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, this.SpringTension);
             }
 
-            var frozennodes = nodes.filter(n => n.PhysicalState.IsFrozen);
-            for (var i = 0; i < frozennodes.length; i++) {
-                var state = frozennodes[i].PhysicalState;
+            //var frozennodes = nodes.filter(n => n.PhysicalState.IsFrozen);
+            for (var i = 0; i < nodes.length; i++) {
+                var state = nodes[i].PhysicalState;
                 if (state.IsFrozen)
                     continue;
                 // Update velocity

@@ -71,11 +71,10 @@ var KineticGraph;
         /// <reference path="../ILinkable.ts" />
         /// <reference path="ForceHelper.ts" />
         (function (Physics) {
-            var totalKE = 0.0;
             var dT = 0.95;
             var damping = 0.90;
             var KE_THRESHOLD = 0.001;
-            var numIterations = 15;
+            var numIterations = 1;
 
             var Engine = (function () {
                 function Engine() {
@@ -121,6 +120,7 @@ var KineticGraph;
                     }
                 };
                 Engine.prototype.ApplyForces = function () {
+                    var totalKE = 0.0;
                     var nodes = this._Nodes;
                     var edges = this._Edges;
 
@@ -153,11 +153,8 @@ var KineticGraph;
                         Physics.ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, this.SpringTension);
                     }
 
-                    var frozennodes = nodes.filter(function (n) {
-                        return n.PhysicalState.IsFrozen;
-                    });
-                    for (var i = 0; i < frozennodes.length; i++) {
-                        var state = frozennodes[i].PhysicalState;
+                    for (var i = 0; i < nodes.length; i++) {
+                        var state = nodes[i].PhysicalState;
                         if (state.IsFrozen)
                             continue;
 
@@ -217,8 +214,12 @@ var KineticGraph;
             __extends(NodeCanvas, _super);
             function NodeCanvas() {
                 _super.call(this);
+                this.Linkable = null;
+                this.Degree = 1.0;
+                this.Graph = null;
                 this._Circle = new Fayde.Shapes.Ellipse();
                 this.ManualMovement = new MulticastEvent();
+                this._LastPos = null;
                 this._IsDragging = false;
 
                 this.PhysicalState = new NodeState();
@@ -302,6 +303,10 @@ var KineticGraph;
             return NodeCanvas;
         })(Fayde.Controls.Canvas);
         Controls.NodeCanvas = NodeCanvas;
+        Fayde.RegisterType(NodeCanvas, {
+            Name: "NodeCanvas",
+            Namespace: "KineticGraph.Controls"
+        });
     })(KineticGraph.Controls || (KineticGraph.Controls = {}));
     var Controls = KineticGraph.Controls;
 })(KineticGraph || (KineticGraph = {}));
@@ -398,6 +403,10 @@ var KineticGraph;
             return EdgeCanvas;
         })(Fayde.Controls.Canvas);
         Controls.EdgeCanvas = EdgeCanvas;
+        Fayde.RegisterType(EdgeCanvas, {
+            Name: "EdgeCanvas",
+            Namespace: "KineticGraph.Controls"
+        });
 
         function buildTriangle(width, height) {
             var p = new Fayde.Shapes.Polygon();
@@ -639,6 +648,8 @@ var KineticGraph;
                 if (edge.Source.Linkable.UniqueID === edge.Sink.Linkable.UniqueID)
                     return null;
                 this.Edges.push(edge);
+                edge.Sink.Degree++;
+                edge.Source.Degree++;
                 this.Children.Add(edge);
                 this._Engine.Disturb();
                 return edge;
@@ -657,6 +668,8 @@ var KineticGraph;
                     return;
                 var existing = this.Edges.splice(index, 1)[0];
                 this.Children.Remove(existing);
+                existing.Sink.Degree--;
+                existing.Source.Degree--;
                 this._Engine.Disturb();
             };
             Graph.prototype.ClearEdges = function () {

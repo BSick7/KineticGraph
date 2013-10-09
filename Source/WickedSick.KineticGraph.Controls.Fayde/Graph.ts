@@ -224,6 +224,8 @@ module KineticGraph.Controls {
             if (edge.Source.Linkable.UniqueID === edge.Sink.Linkable.UniqueID)
                 return null;
             this.Edges.push(edge);
+            edge.Sink.Degree++;
+            edge.Source.Degree++;
             this.Children.Add(edge);
             this._Engine.Disturb();
             return edge;
@@ -242,6 +244,8 @@ module KineticGraph.Controls {
                 return;
             var existing = this.Edges.splice(index, 1)[0];
             this.Children.Remove(existing);
+            existing.Sink.Degree--;
+            existing.Source.Degree--;
             this._Engine.Disturb();
         }
         private ClearEdges() {

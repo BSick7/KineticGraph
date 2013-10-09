@@ -5,3 +5,6 @@ obj
 # mstest test results
 TestResults
 *.user
+Source/KineticGraph.v11.suo
+Source/WickedSick.KineticGraph.Controls.Fayde/KineticGraph.js
+Source/WickedSick.KineticGraph.Controls.Fayde/KineticGraph.js.map
