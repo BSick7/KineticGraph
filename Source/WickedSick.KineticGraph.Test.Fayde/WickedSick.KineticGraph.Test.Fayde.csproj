@@ -65,17 +65,19 @@
     <Content Include="scripts\Fayde.js" />
     <Content Include="scripts\KineticGraph.d.ts" />
     <Content Include="scripts\KineticGraph.js" />
+    <TypeScriptCompile Include="ViewModels\TestViewModel.ts" />
     <Content Include="scripts\Theme.Metro.xml" />
     <Content Include="scripts\Theme.Silverlight.xml" />
-    <TypeScriptCompile Include="ViewModels\TestViewModel.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="default.fap" />
-    <Content Include="packages.config" />
+    <Content Include="default.fap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Home.fayde" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -112,7 +114,7 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Fayde.0.9.6.0\build\Fayde.targets" Condition="Exists('..\packages\Fayde.0.9.6.0\build\Fayde.targets')" />
+  <Import Project="..\packages\Fayde.0.9.6.2\build\Fayde.targets" Condition="Exists('..\packages\Fayde.0.9.6.2\build\Fayde.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

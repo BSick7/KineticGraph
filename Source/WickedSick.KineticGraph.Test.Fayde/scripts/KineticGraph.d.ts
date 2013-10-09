@@ -80,7 +80,6 @@ declare module KineticGraph.Controls {
         public Top : number;
         constructor();
         public UpdatePosition(): void;
-        private SetCoordinates(a, b);
     }
 }
 declare module KineticGraph.Controls {

@@ -40,34 +40,57 @@ module KineticGraph.Test.ViewModels {
         }
 
         Load() {
-            var georgia = new TestNode();
-            var florida = new TestNode();
-            var sc = new TestNode();
-            var tennesse = new TestNode();
-            var nc = new TestNode();
-            var alabama = new TestNode();
-
             var nodes = this.Nodes;
-            nodes.Add(georgia);
-            nodes.Add(florida);
-            nodes.Add(sc);
-            nodes.Add(tennesse);
-            nodes.Add(nc);
-            nodes.Add(alabama);
-
             var edges = this.Edges;
-            edges.Add(georgia.Connect(florida));
-            edges.Add(georgia.Connect(sc));
-            edges.Add(georgia.Connect(nc));
-            edges.Add(georgia.Connect(tennesse));
-            edges.Add(georgia.Connect(alabama));
-
-            edges.Add(alabama.Connect(tennesse));
-            edges.Add(alabama.Connect(florida));
-
-            edges.Add(nc.Connect(sc));
-
-            edges.Add(nc.Connect(tennesse));
+            
+            var florida = this.AddState();
+            var georgia = this.AddState(florida);
+            var sc = this.AddState(georgia);
+            var alabama = this.AddState(florida, georgia);
+            var tennessee = this.AddState(georgia, alabama);
+            var nc = this.AddState(sc, tennessee, georgia);
+            var mississippi = this.AddState(alabama, tennessee);
+            var virginia = this.AddState(nc, tennessee);
+            var kentucky = this.AddState(tennessee, virginia);
+            var wv = this.AddState(kentucky, virginia);
+            var maryland = this.AddState(wv, virginia);
+            var delaware = this.AddState(maryland);
+            var nj = this.AddState(delaware);
+            var penn = this.AddState(wv, maryland, delaware, nj);
+            var ny = this.AddState(penn, nj);
+            var conn = this.AddState(ny);
+            var rhode = this.AddState(conn);
+            var mass = this.AddState(ny, conn, rhode);
+            var vermont = this.AddState(ny, mass);
+            var nh = this.AddState(mass, vermont);
+            var maine = this.AddState(nh);
+            var ohio = this.AddState(penn, wv, kentucky);
+            var michigan = this.AddState(ohio);
+            var indiana = this.AddState(michigan, ohio, kentucky);
+            var illinois = this.AddState(kentucky, indiana);
+            var wisconsin = this.AddState(michigan, illinois);
+            var minnesota = this.AddState(wisconsin);
+            var iowa = this.AddState(minnesota, wisconsin, illinois);
+            var missouri = this.AddState(iowa, illinois, kentucky, tennessee);
+            var arkansas = this.AddState(missouri, tennessee, mississippi);
+            var louisiana = this.AddState(arkansas, mississippi);
+            var texas = this.AddState(louisiana, arkansas);
+            var oklahoma = this.AddState(texas, arkansas, missouri);
+            var kansas = this.AddState(oklahoma, missouri);
+            var nebraska = this.AddState(kansas, missouri, iowa);
+            var sd = this.AddState(nebraska, iowa, minnesota);
+            var nd = this.AddState(sd, minnesota);
+            var montana = this.AddState(nd, sd);
+            var wyoming = this.AddState(montana, nd, sd, nebraska);
+            var colorado = this.AddState(wyoming, nebraska, kansas, oklahoma);
+            var nm = this.AddState(colorado, oklahoma, texas);
+            var arizona = this.AddState(nm);
+            var utah = this.AddState(wyoming, arizona, colorado);
+            var idaho = this.AddState(montana, wyoming, utah);
+            var washington = this.AddState(idaho);
+            var oregon = this.AddState(washington, idaho);
+            var nevada = this.AddState(oregon, idaho, utah, arizona);
+            var california = this.AddState(oregon, nevada, arizona);
         }
 
         private AddNode_Execute() {
@@ -89,6 +112,18 @@ module KineticGraph.Test.ViewModels {
             }
 
             this.Edges.AddRange(newEdges);
+        }
+
+        private AddState(...connections: TestNode[]): TestNode {
+            var node = new TestNode();
+            this.Nodes.Add(node);
+            if (!connections)
+                return node;
+            var len = connections.length;
+            for (var i = 0; i < len; i++) {
+                this.Edges.Add(node.Connect(connections[i]));
+            }
+            return node;
         }
     }
     Fayde.RegisterType(TestViewModel, {

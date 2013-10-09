@@ -11,7 +11,7 @@ module KineticGraph.Controls {
 
         get Left(): number { return this.GetValue(Fayde.Controls.Canvas.LeftProperty); }
         set Left(value: number) { this.SetValue(Fayde.Controls.Canvas.LeftProperty, value); }
-        
+
         get Top(): number { return this.GetValue(Fayde.Controls.Canvas.TopProperty); }
         set Top(value: number) { this.SetValue(Fayde.Controls.Canvas.TopProperty, value); }
 
@@ -20,29 +20,25 @@ module KineticGraph.Controls {
 
             this.IsHitTestVisible = false;
 
-            var line = new Fayde.Shapes.Line();
-            line.StrokeThickness = 1.0;
-            var stroke = new Fayde.Media.SolidColorBrush();
-            stroke.Color = Color.KnownColors.Black;
-            line.Stroke = stroke;
-            this.Children.Add(this._Line = line);
-
+            this.Children.Add(this._Line = buildLine());
             this.Children.Add(this._Triangle = buildTriangle(5, 9));
         }
 
         UpdatePosition() {
-            this.SetCoordinates(this.Source.PhysicalState.Position, this.Sink.PhysicalState.Position);
-        }
+            var source = this.Source;
+            var sink = this.Sink;
 
-        private SetCoordinates(a: Physics.IVector, b: Physics.IVector) {
+            var a = source == null ? { X: 0, Y: 0 } : source.PhysicalState.Position;
+            var b = sink == null ? { X: 0, Y: 0 } : sink.PhysicalState.Position;
+
             var theta = getLineAngle(a, b);
             if (isNaN(theta))
                 return;
             var thetaRad = theta * (Math.PI / 180);
             //double thetaRev = thetaRad - (Math.PI*2.0);
 
-            var sp = this.Source == null ? a : getEdgeOfCircle(a, thetaRad, this.Source.Radius, true);
-            var ep = this.Sink == null ? b : getEdgeOfCircle(b, thetaRad, this.Sink.Radius, false);
+            var sp = source == null ? a : getEdgeOfCircle(a, thetaRad, source.Radius, true);
+            var ep = sink == null ? b : getEdgeOfCircle(b, thetaRad, sink.Radius, false);
 
             var x1 = Math.min(sp.X, ep.X);
             var x2 = Math.max(sp.X, ep.X);
@@ -83,6 +79,14 @@ module KineticGraph.Controls {
         Namespace: "KineticGraph.Controls"
     });
 
+    function buildLine(): Fayde.Shapes.Line {
+        var line = new Fayde.Shapes.Line();
+        line.StrokeThickness = 1.0;
+        var stroke = new Fayde.Media.SolidColorBrush();
+        stroke.Color = Color.KnownColors.Black;
+        line.Stroke = stroke;
+        return line;
+    }
     function buildTriangle(width: number, height: number): Fayde.Shapes.Polygon {
         var p = new Fayde.Shapes.Polygon();
         p.Width = width;

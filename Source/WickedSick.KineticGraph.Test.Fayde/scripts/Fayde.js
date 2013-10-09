@@ -8493,7 +8493,7 @@ else
             mat4.multiply(this.LocalProjection, m, this.LocalProjection);
             if (false) {
             } else {
-                mat3.multiply(this.AbsoluteXform, this.RenderXform, this.AbsoluteXform);
+                mat3.multiply(this.RenderXform, this.AbsoluteXform, this.AbsoluteXform);
             }
             if (projection) {
                 m = projection.GetTransform();
@@ -9099,7 +9099,7 @@ else
             if (rect.isEmpty(region))
                 return;
             ctx.Save();
-            ctx.TransformMatrix(this.RenderXform);
+            ctx.PreTransformMatrix(this.RenderXform);
             ctx.CanvasContext.globalAlpha = this.TotalOpacity;
             var uie = this.Node.XObject;
             var canvasCtx = ctx.CanvasContext;
@@ -17200,7 +17200,8 @@ var Fayde;
             RotateTransform.prototype._BuildValue = function () {
                 var cx = this.CenterX;
                 var cy = this.CenterY;
-                var angleRad = Math.PI / 180 * this.Angle;
+                var angle = 360 - this.Angle;
+                var angleRad = Math.PI / 180 * angle;
                 var m = mat3.createRotate(angleRad);
                 if (cx === 0 && cy === 0)
                     return m;
