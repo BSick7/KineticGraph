@@ -17,7 +17,7 @@ module KineticGraph.Controls.Physics {
     var dT = 0.95;
     var damping = 0.90;
     var KE_THRESHOLD = 0.001;
-    var numIterations = 1;
+    var numIterations = 2;
 
     export class Engine {
         private _KE: number = Number.POSITIVE_INFINITY;
@@ -75,8 +75,10 @@ module KineticGraph.Controls.Physics {
                 nodes[i].PhysicalState.Force.Y = 0;
             }
 
+            var node: INode;
             for (var i = 0; i < nodes.length; i++) {
-                var state = nodes[i].PhysicalState;
+                node = nodes[i];
+                var state = node.PhysicalState;
                 if (state.IsFrozen)
                     continue;
 
@@ -90,18 +92,20 @@ module KineticGraph.Controls.Physics {
                      * In a nutshell, lots of connected nodes --> more repulsion.
                      * Increasing repulsion initial value will increase separation of a cluster.
                      */
-                    var repulsion = this.Repulsion * Math.log(other.Degree + 2) / Math.log(2);
+                    var log2degree = Math.log(other.Degree + 2) / Math.log(2);
+                    var repulsion = this.Repulsion * log2degree;
+                    repulsion *= (node.Radius + other.Radius) / 10.0;
                     ForceHelper.ApplyCoulombRepulsion(state, otherState, repulsion);
                 }
             }
 
             //Hooke's attraction with every connected node
+            var tension = this.SpringTension;
             for (var i = 0; i < edges.length; i++) {
                 var edge = edges[i];
-                ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, this.SpringTension);
+                ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, tension);
             }
 
-            //var frozennodes = nodes.filter(n => n.PhysicalState.IsFrozen);
             for (var i = 0; i < nodes.length; i++) {
                 var state = nodes[i].PhysicalState;
                 if (state.IsFrozen)

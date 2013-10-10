@@ -12,13 +12,19 @@ module KineticGraph.Controls {
     }
 
     export class NodeCanvas extends Fayde.Controls.Canvas implements Physics.INode {
-        Linkable: ILinkable = null;
+        private _Linkable: ILinkable = null;
+        get Linkable(): ILinkable { return this._Linkable; }
+        set Linkable(value: ILinkable) {
+            this._Linkable = value;
+            this.DataContext = value;
+        }
         PhysicalState: Physics.INodeState;
-        Degree: number = 1.0;
+        Degree: number = 0.0;
 
         Graph: Graph = null;
 
         private _Circle = new Fayde.Shapes.Ellipse();
+        private _TextBlock = new Fayde.Controls.TextBlock();
 
         static IsSelectedProperty = DependencyProperty.Register("IsSelected", () => Boolean, NodeCanvas, false, (d, args) => (<NodeCanvas>d).OnIsSelectedChanged(args));
         IsSelected: boolean;
@@ -36,10 +42,11 @@ module KineticGraph.Controls {
                 this.Graph.SetCurrentValue(Graph.SelectedNodeProperty, this);
         }
 
-        get Radius(): number { return this._Circle.Width / 2; }
-        set Radius(value: number) {
-            this._Circle.Width = 2 * value;
-            this._Circle.Height = 2 * value;
+        static RadiusProperty = DependencyProperty.Register("Radius", () => Number, NodeCanvas, 15.0, (d, args) => (<NodeCanvas>d).OnRadiusChanged(args));
+        Radius: number;
+        private OnRadiusChanged(args: IDependencyPropertyChangedEventArgs) {
+            var radius = args.NewValue;
+            this.UpdateMarkers();
         }
 
         ManualMovement = new MulticastEvent<EventArgs>();
@@ -55,21 +62,36 @@ module KineticGraph.Controls {
             this.LostMouseCapture.Subscribe(this.Node_LostMouseCapture, this);
 
             var circle = this._Circle;
-            circle.Width = 20;
-            circle.Height = 20;
-            var fill = new Fayde.Media.SolidColorBrush();
-            fill.Color = Color.FromRgba(128, 128, 128, 0.5);
-            circle.Fill = fill;
-            var stroke = new Fayde.Media.SolidColorBrush();
-            stroke.Color = Color.FromRgba(128, 128, 128, 1.0);
-            circle.Stroke = stroke;
+            circle.Fill = new Fayde.Media.SolidColorBrush(Color.FromRgba(128, 128, 128, 0.5));
+            circle.Stroke = new Fayde.Media.SolidColorBrush(Color.FromRgba(128, 128, 128, 1.0));
             circle.StrokeThickness = 2.0;
             this.Children.Add(circle);
+            
+            var tb = this._TextBlock;
+            tb.SetBinding(Fayde.Controls.TextBlock.TextProperty, new Fayde.Data.Binding(""));
+            tb.SizeChanged.Subscribe(this.TextBlock_SizeChanged, this);
+            this.Children.Add(tb);
         }
 
         UpdatePosition() {
             Fayde.Controls.Canvas.SetLeft(this, this.PhysicalState.Position.X - (this._Circle.ActualWidth / 2));
             Fayde.Controls.Canvas.SetTop(this, this.PhysicalState.Position.Y - (this._Circle.ActualHeight / 2));
+        }
+
+        SetDisplayMemberPath(path: string) {
+            this._TextBlock.SetBinding(Fayde.Controls.TextBlock.TextProperty, new Fayde.Data.Binding(path));
+        }
+
+        private TextBlock_SizeChanged(sender: any, e: Fayde.SizeChangedEventArgs) { this.UpdateMarkers(); }
+        private UpdateMarkers() {
+            var radius = this.Radius;
+            this._Circle.Width = 2 * radius;
+            this._Circle.Height = 2 * radius;
+            
+            var tbw = this._TextBlock.ActualWidth;
+            var tbh = this._TextBlock.ActualHeight;
+            this._TextBlock.SetValue(Fayde.Controls.Canvas.LeftProperty, radius - tbw / 2.0);
+            this._TextBlock.SetValue(Fayde.Controls.Canvas.TopProperty, radius - tbh / 2.0);
         }
 
         private _LastPos: Point = null;

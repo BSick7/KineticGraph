@@ -4173,7 +4173,7 @@ declare module Fayde.Media {
     class SolidColorBrush extends Media.Brush {
         static ColorProperty: DependencyProperty;
         public Color: Color;
-        constructor();
+        constructor(...args: any[]);
         static FromColor(color: Color): SolidColorBrush;
         public CreateBrush(ctx: CanvasRenderingContext2D, bounds: rect): any;
     }
@@ -5583,6 +5583,7 @@ declare module Fayde.Shapes {
         static PointsProperty: DependencyProperty;
         public FillRule: Shapes.FillRule;
         public Points: Shapes.PointCollection;
+        constructor();
         private _PointsChanged(args);
         public _BuildPath(): Shapes.RawPath;
         private _FillRuleChanged(args);
@@ -5595,6 +5596,7 @@ declare module Fayde.Shapes {
         static PointsProperty: DependencyProperty;
         public FillRule: Shapes.FillRule;
         public Points: Shapes.PointCollection;
+        constructor();
         private _PointsChanged(args);
         public _BuildPath(): Shapes.RawPath;
         private _FillRuleChanged(args);

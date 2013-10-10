@@ -32,7 +32,8 @@
         </StackPanel>
         <Border Grid.Column="1">
             <kgcontrols:Graph x:Name="Graph" NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}"
-                              Repulsion="{Binding Repulsion}" SpringTension="{Binding SpringTension}" />
+                              Repulsion="{Binding Repulsion}" SpringTension="{Binding SpringTension}"
+                              NodeDisplayMemberPath="Abbreviation" NodeWeightPath="Weight" />
         </Border>
     </Grid>
 </Application>

@@ -4173,7 +4173,7 @@ declare module Fayde.Media {
     class SolidColorBrush extends Media.Brush {
         static ColorProperty: DependencyProperty;
         public Color: Color;
-        constructor();
+        constructor(...args: any[]);
         static FromColor(color: Color): SolidColorBrush;
         public CreateBrush(ctx: CanvasRenderingContext2D, bounds: rect): any;
     }

@@ -50,18 +50,25 @@ declare module KineticGraph.Controls.Physics {
 }
 declare module KineticGraph.Controls {
     class NodeCanvas extends Fayde.Controls.Canvas implements Controls.Physics.INode {
-        public Linkable: Controls.ILinkable;
+        private _Linkable;
+        public Linkable : Controls.ILinkable;
         public PhysicalState: Controls.Physics.INodeState;
         public Degree: number;
         public Graph: Controls.Graph;
         private _Circle;
+        private _TextBlock;
         static IsSelectedProperty: DependencyProperty;
         public IsSelected: boolean;
         private OnIsSelectedChanged(args);
-        public Radius : number;
+        static RadiusProperty: DependencyProperty;
+        public Radius: number;
+        private OnRadiusChanged(args);
         public ManualMovement: MulticastEvent<EventArgs>;
         constructor();
         public UpdatePosition(): void;
+        public SetDisplayMemberPath(path: string): void;
+        private TextBlock_SizeChanged(sender, e);
+        private UpdateMarkers();
         private _LastPos;
         private _IsDragging;
         private Node_MouseLeftButtonDown(sender, e);
@@ -74,6 +81,8 @@ declare module KineticGraph.Controls {
     class EdgeCanvas extends Fayde.Controls.Canvas implements Controls.Physics.IEdge {
         public Source: Controls.Physics.INode;
         public Sink: Controls.Physics.INode;
+        private _IsBidirectional;
+        public IsBidirectional : boolean;
         private _Line;
         private _Triangle;
         public Left : number;
@@ -96,6 +105,9 @@ declare module KineticGraph.Controls {
         private _Timer;
         private Nodes;
         private Edges;
+        static IsBidirectionalProperty: DependencyProperty;
+        public IsBidirectional: boolean;
+        private OnIsBidirectionalChanged(args);
         static SelectedNodeProperty: DependencyProperty;
         public SelectedNode: Controls.NodeCanvas;
         private OnSelectedNodeChanged(args);
@@ -113,6 +125,13 @@ declare module KineticGraph.Controls {
         static SpringTensionProperty: DependencyProperty;
         public SpringTension: number;
         private OnSpringTensionChanged(args);
+        static NodeDisplayMemberPathProperty: DependencyProperty;
+        public NodeDisplayMemberPath: string;
+        private OnNodeDisplayMemberPathChanged(args);
+        static NodeWeightPathProperty: DependencyProperty;
+        public NodeWeightPath: string;
+        private OnNodeWeightPathChanged(args);
+        private SetNodeWeightPath(nodeCanvas, path);
         constructor();
         public OnTicked(lastTime: number, nowTime: number): void;
         private _LastPos;
@@ -121,6 +140,7 @@ declare module KineticGraph.Controls {
         private Graph_MouseMove(sender, e);
         private Graph_MouseLeftButtonUp(sender, e);
         private Graph_LostMouseCapture(sender, e);
+        private Graph_SizeChanged(sender, e);
         public ResetMovement(): void;
         public Center(): void;
         private _LastVisualTick;

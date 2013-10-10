@@ -20924,9 +20924,13 @@ var Fayde;
         var SolidColorBrush = (function (_super) {
             __extends(SolidColorBrush, _super);
             function SolidColorBrush() {
+                var args = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    args[_i] = arguments[_i + 0];
+                }
                 _super.call(this);
-                if (arguments.length === 1 && arguments[0] instanceof Color)
-                    this.Color = arguments[0];
+                if (args && args.length === 1 && args[0] instanceof Color)
+                    this.Color = args[0];
             }
             SolidColorBrush.FromColor = function (color) {
                 var scb = new SolidColorBrush();

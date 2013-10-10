@@ -6,6 +6,13 @@ module KineticGraph.Controls {
         Source: Physics.INode;
         Sink: Physics.INode;
 
+        private _IsBidirectional: boolean = false;
+        get IsBidirectional(): boolean { return this._IsBidirectional; }
+        set IsBidirectional(value: boolean) {
+            this._IsBidirectional = value;
+            this._Triangle.Visibility = value === true ? Fayde.Visibility.Visible : Fayde.Visibility.Collapsed;
+        }
+
         private _Line: Fayde.Shapes.Line;
         private _Triangle: Fayde.Shapes.Polygon;
 
@@ -22,6 +29,7 @@ module KineticGraph.Controls {
 
             this.Children.Add(this._Line = buildLine());
             this.Children.Add(this._Triangle = buildTriangle(5, 9));
+            this._Triangle.Visibility = this.IsBidirectional === true ? Fayde.Visibility.Visible : Fayde.Visibility.Collapsed;
         }
 
         UpdatePosition() {

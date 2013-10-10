@@ -2,7 +2,7 @@ var KineticGraph;
 (function (KineticGraph) {
     (function (Controls) {
         (function (Physics) {
-            var DEFAULT_ATTRACTION_CONSTANT = 0.00000004;
+            var DEFAULT_ATTRACTION_CONSTANT = 0.000000004;
             var MAGNITUDE_MAX = 10;
             var ForceHelper = (function () {
                 function ForceHelper() {
@@ -74,7 +74,7 @@ var KineticGraph;
             var dT = 0.95;
             var damping = 0.90;
             var KE_THRESHOLD = 0.001;
-            var numIterations = 1;
+            var numIterations = 2;
 
             var Engine = (function () {
                 function Engine() {
@@ -129,8 +129,10 @@ var KineticGraph;
                         nodes[i].PhysicalState.Force.Y = 0;
                     }
 
+                    var node;
                     for (var i = 0; i < nodes.length; i++) {
-                        var state = nodes[i].PhysicalState;
+                        node = nodes[i];
+                        var state = node.PhysicalState;
                         if (state.IsFrozen)
                             continue;
 
@@ -143,14 +145,18 @@ var KineticGraph;
                             * In a nutshell, lots of connected nodes --> more repulsion.
                             * Increasing repulsion initial value will increase separation of a cluster.
                             */
-                            var repulsion = this.Repulsion * Math.log(other.Degree + 2) / Math.log(2);
+                            var log2degree = Math.log(other.Degree + 2) / Math.log(2);
+                            var repulsion = this.Repulsion * log2degree;
+                            repulsion *= (node.Radius + other.Radius) / 10.0;
                             Physics.ForceHelper.ApplyCoulombRepulsion(state, otherState, repulsion);
                         }
                     }
 
+                    //Hooke's attraction with every connected node
+                    var tension = this.SpringTension;
                     for (var i = 0; i < edges.length; i++) {
                         var edge = edges[i];
-                        Physics.ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, this.SpringTension);
+                        Physics.ForceHelper.ApplyHookeAttraction(edge.Source.PhysicalState, edge.Sink.PhysicalState, tension);
                     }
 
                     for (var i = 0; i < nodes.length; i++) {
@@ -214,10 +220,11 @@ var KineticGraph;
             __extends(NodeCanvas, _super);
             function NodeCanvas() {
                 _super.call(this);
-                this.Linkable = null;
-                this.Degree = 1.0;
+                this._Linkable = null;
+                this.Degree = 0.0;
                 this.Graph = null;
                 this._Circle = new Fayde.Shapes.Ellipse();
+                this._TextBlock = new Fayde.Controls.TextBlock();
                 this.ManualMovement = new MulticastEvent();
                 this._LastPos = null;
                 this._IsDragging = false;
@@ -230,17 +237,28 @@ var KineticGraph;
                 this.LostMouseCapture.Subscribe(this.Node_LostMouseCapture, this);
 
                 var circle = this._Circle;
-                circle.Width = 20;
-                circle.Height = 20;
-                var fill = new Fayde.Media.SolidColorBrush();
-                fill.Color = Color.FromRgba(128, 128, 128, 0.5);
-                circle.Fill = fill;
-                var stroke = new Fayde.Media.SolidColorBrush();
-                stroke.Color = Color.FromRgba(128, 128, 128, 1.0);
-                circle.Stroke = stroke;
+                circle.Fill = new Fayde.Media.SolidColorBrush(Color.FromRgba(128, 128, 128, 0.5));
+                circle.Stroke = new Fayde.Media.SolidColorBrush(Color.FromRgba(128, 128, 128, 1.0));
                 circle.StrokeThickness = 2.0;
                 this.Children.Add(circle);
+
+                var tb = this._TextBlock;
+                tb.SetBinding(Fayde.Controls.TextBlock.TextProperty, new Fayde.Data.Binding(""));
+                tb.SizeChanged.Subscribe(this.TextBlock_SizeChanged, this);
+                this.Children.Add(tb);
             }
+            Object.defineProperty(NodeCanvas.prototype, "Linkable", {
+                get: function () {
+                    return this._Linkable;
+                },
+                set: function (value) {
+                    this._Linkable = value;
+                    this.DataContext = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
             NodeCanvas.prototype.OnIsSelectedChanged = function (args) {
                 if (args.OldValue === args.NewValue)
                     return;
@@ -255,21 +273,32 @@ var KineticGraph;
                     this.Graph.SetCurrentValue(Controls.Graph.SelectedNodeProperty, this);
             };
 
-            Object.defineProperty(NodeCanvas.prototype, "Radius", {
-                get: function () {
-                    return this._Circle.Width / 2;
-                },
-                set: function (value) {
-                    this._Circle.Width = 2 * value;
-                    this._Circle.Height = 2 * value;
-                },
-                enumerable: true,
-                configurable: true
-            });
+            NodeCanvas.prototype.OnRadiusChanged = function (args) {
+                var radius = args.NewValue;
+                this.UpdateMarkers();
+            };
 
             NodeCanvas.prototype.UpdatePosition = function () {
                 Fayde.Controls.Canvas.SetLeft(this, this.PhysicalState.Position.X - (this._Circle.ActualWidth / 2));
                 Fayde.Controls.Canvas.SetTop(this, this.PhysicalState.Position.Y - (this._Circle.ActualHeight / 2));
+            };
+
+            NodeCanvas.prototype.SetDisplayMemberPath = function (path) {
+                this._TextBlock.SetBinding(Fayde.Controls.TextBlock.TextProperty, new Fayde.Data.Binding(path));
+            };
+
+            NodeCanvas.prototype.TextBlock_SizeChanged = function (sender, e) {
+                this.UpdateMarkers();
+            };
+            NodeCanvas.prototype.UpdateMarkers = function () {
+                var radius = this.Radius;
+                this._Circle.Width = 2 * radius;
+                this._Circle.Height = 2 * radius;
+
+                var tbw = this._TextBlock.ActualWidth;
+                var tbh = this._TextBlock.ActualHeight;
+                this._TextBlock.SetValue(Fayde.Controls.Canvas.LeftProperty, radius - tbw / 2.0);
+                this._TextBlock.SetValue(Fayde.Controls.Canvas.TopProperty, radius - tbh / 2.0);
             };
 
             NodeCanvas.prototype.Node_MouseLeftButtonDown = function (sender, e) {
@@ -300,6 +329,12 @@ var KineticGraph;
             }, NodeCanvas, false, function (d, args) {
                 return (d).OnIsSelectedChanged(args);
             });
+
+            NodeCanvas.RadiusProperty = DependencyProperty.Register("Radius", function () {
+                return Number;
+            }, NodeCanvas, 15.0, function (d, args) {
+                return (d).OnRadiusChanged(args);
+            });
             return NodeCanvas;
         })(Fayde.Controls.Canvas);
         Controls.NodeCanvas = NodeCanvas;
@@ -319,12 +354,26 @@ var KineticGraph;
             __extends(EdgeCanvas, _super);
             function EdgeCanvas() {
                 _super.call(this);
+                this._IsBidirectional = false;
 
                 this.IsHitTestVisible = false;
 
                 this.Children.Add(this._Line = buildLine());
                 this.Children.Add(this._Triangle = buildTriangle(5, 9));
+                this._Triangle.Visibility = this.IsBidirectional === true ? Fayde.Visibility.Visible : Fayde.Visibility.Collapsed;
             }
+            Object.defineProperty(EdgeCanvas.prototype, "IsBidirectional", {
+                get: function () {
+                    return this._IsBidirectional;
+                },
+                set: function (value) {
+                    this._IsBidirectional = value;
+                    this._Triangle.Visibility = value === true ? Fayde.Visibility.Visible : Fayde.Visibility.Collapsed;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
             Object.defineProperty(EdgeCanvas.prototype, "Left", {
                 get: function () {
                     return this.GetValue(Fayde.Controls.Canvas.LeftProperty);
@@ -482,10 +531,19 @@ var KineticGraph;
                 this.MouseLeftButtonUp.Subscribe(this.Graph_MouseLeftButtonUp, this);
                 this.MouseMove.Subscribe(this.Graph_MouseMove, this);
                 this.LostMouseCapture.Subscribe(this.Graph_LostMouseCapture, this);
+                this.SizeChanged.Subscribe(this.Graph_SizeChanged, this);
 
                 this._Timer = new Fayde.ClockTimer();
                 this._Timer.RegisterTimer(this);
             }
+            Graph.prototype.OnIsBidirectionalChanged = function (args) {
+                var isb = args.NewValue === true;
+                var enumerator = Fayde.ArrayEx.GetEnumerator(this.Edges);
+                while (enumerator.MoveNext()) {
+                    enumerator.Current.IsBidirectional = isb;
+                }
+            };
+
             Graph.prototype.OnSelectedNodeChanged = function (args) {
                 var oldNode = args.OldValue;
                 if (oldNode != null && oldNode.IsSelected)
@@ -564,6 +622,27 @@ var KineticGraph;
                 this._Engine.Disturb();
             };
 
+            Graph.prototype.OnNodeDisplayMemberPathChanged = function (args) {
+                var path = args.NewValue || "";
+                var enumerator = Fayde.ArrayEx.GetEnumerator(this.Nodes);
+                while (enumerator.MoveNext()) {
+                    enumerator.Current.SetDisplayMemberPath(path);
+                }
+            };
+
+            Graph.prototype.OnNodeWeightPathChanged = function (args) {
+                var path = args.NewValue || "";
+                var enumerator = Fayde.ArrayEx.GetEnumerator(this.Nodes);
+                while (enumerator.MoveNext()) {
+                    this.SetNodeWeightPath(enumerator.Current, path);
+                }
+            };
+            Graph.prototype.SetNodeWeightPath = function (nodeCanvas, path) {
+                if (!path)
+                    return nodeCanvas.ClearValue(Controls.NodeCanvas.RadiusProperty);
+                nodeCanvas.SetBinding(Controls.NodeCanvas.RadiusProperty, new Fayde.Data.Binding(path));
+            };
+
             Graph.prototype.OnTicked = function (lastTime, nowTime) {
                 this._Engine.Step();
                 this.UpdateVisuals();
@@ -589,6 +668,12 @@ var KineticGraph;
             };
             Graph.prototype.Graph_LostMouseCapture = function (sender, e) {
                 this._IsDragging = false;
+            };
+            Graph.prototype.Graph_SizeChanged = function (sender, e) {
+                var dw = e.NewSize.Width - e.PreviousSize.Width;
+                var dh = e.NewSize.Height - e.PreviousSize.Height;
+                this._CanvasTranslate.X += dw / 2.0;
+                this._CanvasTranslate.Y += dh / 2.0;
             };
 
             Graph.prototype.ResetMovement = function () {
@@ -718,6 +803,8 @@ var KineticGraph;
                 this.Children.Add(node);
                 node.ManualMovement.Subscribe(this.Node_ManualMovement, this);
                 node.PhysicalState.Position = this._GetRandomVector();
+                node.SetDisplayMemberPath(this.NodeDisplayMemberPath);
+                this.SetNodeWeightPath(node, this.NodeWeightPath);
                 this._Engine.Disturb();
                 return node;
             };
@@ -773,6 +860,12 @@ var KineticGraph;
                     height = 100;
                 return { X: randomInt(0, width), Y: randomInt(0, height) };
             };
+            Graph.IsBidirectionalProperty = DependencyProperty.Register("IsBidirectional", function () {
+                return Boolean;
+            }, Graph, false, function (d, args) {
+                return (d).OnIsBidirectionalChanged(args);
+            });
+
             Graph.SelectedNodeProperty = DependencyProperty.Register("SelectedNode", function () {
                 return Controls.NodeCanvas;
             }, Graph, undefined, function (d, args) {
@@ -801,6 +894,18 @@ var KineticGraph;
                 return Number;
             }, Graph, 0.0009, function (d, args) {
                 return (d).OnSpringTensionChanged(args);
+            });
+
+            Graph.NodeDisplayMemberPathProperty = DependencyProperty.Register("NodeDisplayMemberPath", function () {
+                return String;
+            }, Graph, undefined, function (d, args) {
+                return (d).OnNodeDisplayMemberPathChanged(args);
+            });
+
+            Graph.NodeWeightPathProperty = DependencyProperty.Register("NodeWeightPath", function () {
+                return String;
+            }, Graph, undefined, function (d, args) {
+                return (d).OnNodeWeightPathChanged(args);
             });
             return Graph;
         })(Fayde.Controls.Canvas);

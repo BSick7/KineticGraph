@@ -78,6 +78,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Home.fayde" />
+    <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

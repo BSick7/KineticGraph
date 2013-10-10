@@ -10,7 +10,7 @@ module KineticGraph.Controls.Physics {
         Force: IVector;
     }
 
-    var DEFAULT_ATTRACTION_CONSTANT = 0.00000004;
+    var DEFAULT_ATTRACTION_CONSTANT = 0.000000004;
     var MAGNITUDE_MAX = 10;
     export class ForceHelper {
         static AttractionConstant: number = DEFAULT_ATTRACTION_CONSTANT;
