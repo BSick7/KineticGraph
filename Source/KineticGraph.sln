@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test.ViewModels", "WickedSick.KineticGraph.Test.ViewModels\WickedSick.KineticGraph.Test.ViewModels.csproj", "{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Controls.HTML5", "WickedSick.KineticGraph.Controls.HTML5\WickedSick.KineticGraph.Controls.HTML5.csproj", "{E4B78D93-9CE0-487D-8A63-402E9573E809}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Controls.Fayde", "WickedSick.KineticGraph.Controls.Fayde\WickedSick.KineticGraph.Controls.Fayde.csproj", "{B9A08A49-38C0-4B88-973A-B966BF15D63A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WickedSick.KineticGraph.Test.Fayde", "WickedSick.KineticGraph.Test.Fayde\WickedSick.KineticGraph.Test.Fayde.csproj", "{37D567D4-72AA-423A-AE03-707D03E5FBC2}"
@@ -49,10 +47,6 @@ Global
 		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5D67F63-1BAB-4FCF-A7B7-B0BCBCABF021}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4B78D93-9CE0-487D-8A63-402E9573E809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4B78D93-9CE0-487D-8A63-402E9573E809}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4B78D93-9CE0-487D-8A63-402E9573E809}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4B78D93-9CE0-487D-8A63-402E9573E809}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9A08A49-38C0-4B88-973A-B966BF15D63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9A08A49-38C0-4B88-973A-B966BF15D63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9A08A49-38C0-4B88-973A-B966BF15D63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
