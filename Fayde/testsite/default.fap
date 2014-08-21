@@ -1,0 +1,19 @@
+<Application
+        xmlns="http://schemas.wsick.com/fayde"
+        xmlns:x="http://schemas.wsick.com/fayde/x"
+        xmlns:vms="ViewModels"
+        xmlns:kg="lib:Fayde.KineticGraph"
+        ThemeName="Metro">
+    <Application.Resources>
+    </Application.Resources>
+    <Grid Background="Transparent">
+        <Grid.DataContext>
+            <vms:TestViewModel />
+        </Grid.DataContext>
+        <Border>
+            <kg:Graph x:Name="Graph" NodesSource="{Binding Nodes}" EdgesSource="{Binding Edges}"
+                      Repulsion="{Binding Repulsion}" SpringTension="{Binding SpringTension}"
+                      NodeDisplayMemberPath="Abbreviation" NodeWeightPath="Weight" />
+        </Border>
+    </Grid>
+</Application>

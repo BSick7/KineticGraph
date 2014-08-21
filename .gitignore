@@ -8,3 +8,8 @@ TestResults
 Source/KineticGraph.v11.suo
 Source/WickedSick.KineticGraph.Controls.Fayde/KineticGraph.js
 Source/WickedSick.KineticGraph.Controls.Fayde/KineticGraph.js.map
+Fayde/.idea/
+Fayde/node_modules/
+Fayde/testsite/lib/
+Fayde/test/lib/
+Fayde/testsite/.build/

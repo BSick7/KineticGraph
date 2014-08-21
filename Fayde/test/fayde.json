@@ -1,0 +1,7 @@
+{
+  "libs": {
+    "Fayde.KineticGraph": {
+      "exports": "Fayde.KineticGraph"
+    }
+  }
+}
