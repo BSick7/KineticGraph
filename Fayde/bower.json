@@ -10,6 +10,6 @@
     "Gruntfile.js"
   ],
   "dependencies": {
-    "fayde": "~0.12.0"
+    "fayde": "~0.13.0"
   }
 }

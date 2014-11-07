@@ -43,8 +43,8 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('./package.json'),
         clean: {
             bower: ['./lib'],
-            testsite: ['./testsite/lib'],
-            test: ['./test/lib']
+            test: ['<%= dirs.test.root %>/lib'],
+            testsite: ['<%= dirs.testsite.root %>/lib']
         },
         setup: {
             fayde: {
@@ -71,7 +71,6 @@ module.exports = function (grunt) {
             },
             testsite: {
                 files: [
-                    { src: './lib/qunit', dest: '<%= dirs.testsite.root %>/lib/qunit' },
                     { src: './lib/requirejs', dest: '<%= dirs.testsite.root %>/lib/requirejs' },
                     { src: './lib/requirejs-text', dest: '<%= dirs.testsite.root %>/lib/requirejs-text' },
                     { src: './lib/minerva', dest: '<%= dirs.testsite.root %>/lib/minerva' },
@@ -81,6 +80,11 @@ module.exports = function (grunt) {
                     { src: './Fayde.KineticGraph.d.ts', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.d.ts' },
                     { src: './Fayde.KineticGraph.js.map', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.js.map' },
                     { src: './src', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/src' }
+                ]
+            },
+            localfayde: {
+                files: [
+                    { src: '../../Fayde', dest: './lib/Fayde' }
                 ]
             }
         },
@@ -136,10 +140,6 @@ module.exports = function (grunt) {
                 files: ['src/**/*.ts'],
                 tasks: ['typescript:build']
             },
-            dist: {
-                files: ['<%= meta.name %>.js'],
-                tasks: ['copy:pretestsite']
-            },
             testsitets: {
                 files: ['<%= dirs.testsite.root %>/**/*.ts'],
                 tasks: ['typescript:testsite']
@@ -194,4 +194,5 @@ module.exports = function (grunt) {
     grunt.registerTask('package', ['nugetpack:dist']);
     grunt.registerTask('publish', ['nugetpack:dist', 'nugetpush:dist']);
     grunt.registerTask('lib:reset', ['clean', 'setup', 'symlink:test', 'symlink:testsite']);
+    grunt.registerTask('link:fayde' ['symlink:localfayde']);
 };
