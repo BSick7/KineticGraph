@@ -3,6 +3,8 @@
 /// <reference path="Graph.ts" />
 
 module Fayde.KineticGraph {
+    import Point = minerva.Point;
+
     class NodeState implements Physics.INodeState {
         Position = { X: 0.0, Y: 0.0 };
         Velocity = { X: 0.0, Y: 0.0 };
@@ -107,9 +109,9 @@ module Fayde.KineticGraph {
         private Node_MouseMove(sender: any, e: Fayde.Input.MouseEventArgs) {
             if (this._IsDragging) {
                 var curPos = e.GetPosition(this.VisualParent);
-                var delta = new Point(curPos.X - this._LastPos.X, curPos.Y - this._LastPos.Y);
-                this.PhysicalState.Position.X += delta.X;
-                this.PhysicalState.Position.Y += delta.Y;
+                var delta = new Point(curPos.x - this._LastPos.x, curPos.y - this._LastPos.y);
+                this.PhysicalState.Position.X += delta.x;
+                this.PhysicalState.Position.Y += delta.y;
                 this._LastPos = curPos;
             }
         }

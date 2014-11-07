@@ -334,6 +334,8 @@ var Fayde;
 var Fayde;
 (function (Fayde) {
     (function (KineticGraph) {
+        var Point = minerva.Point;
+
         var NodeState = (function () {
             function NodeState() {
                 this.Position = { X: 0.0, Y: 0.0 };
@@ -441,9 +443,9 @@ var Fayde;
             NodeCanvas.prototype.Node_MouseMove = function (sender, e) {
                 if (this._IsDragging) {
                     var curPos = e.GetPosition(this.VisualParent);
-                    var delta = new Point(curPos.X - this._LastPos.X, curPos.Y - this._LastPos.Y);
-                    this.PhysicalState.Position.X += delta.X;
-                    this.PhysicalState.Position.Y += delta.Y;
+                    var delta = new Point(curPos.x - this._LastPos.x, curPos.y - this._LastPos.y);
+                    this.PhysicalState.Position.X += delta.x;
+                    this.PhysicalState.Position.Y += delta.y;
                     this._LastPos = curPos;
                 }
             };
@@ -631,9 +633,8 @@ var Fayde;
             Graph.prototype.Graph_MouseMove = function (sender, e) {
                 if (this._IsDragging) {
                     var curPos = e.GetPosition(this);
-                    var delta = new Point(curPos.X - this._LastPos.X, curPos.Y - this._LastPos.Y);
-                    this._CanvasTranslate.X += delta.X;
-                    this._CanvasTranslate.Y += delta.Y;
+                    this._CanvasTranslate.X += (curPos.x - this._LastPos.x);
+                    this._CanvasTranslate.Y += (curPos.y - this._LastPos.y);
                     this._LastPos = curPos;
                 }
             };
@@ -647,8 +648,8 @@ var Fayde;
             };
 
             Graph.prototype.Graph_SizeChanged = function (sender, e) {
-                var dw = e.NewSize.Width - e.PreviousSize.Width;
-                var dh = e.NewSize.Height - e.PreviousSize.Height;
+                var dw = e.NewSize.width - e.PreviousSize.width;
+                var dh = e.NewSize.height - e.PreviousSize.height;
                 this._CanvasTranslate.X += dw / 2.0;
                 this._CanvasTranslate.Y += dh / 2.0;
             };

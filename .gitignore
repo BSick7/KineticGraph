@@ -13,3 +13,9 @@ Fayde/node_modules/
 Fayde/testsite/lib/
 Fayde/test/lib/
 Fayde/testsite/.build/
+.idea/
+Fayde/lib/
+Fayde/test/runner.js
+Fayde/test/runner.js.map
+Fayde/test/tests/test1.js
+Fayde/test/tests/test1.js.map
