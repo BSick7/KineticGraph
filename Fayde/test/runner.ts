@@ -1,6 +1,3 @@
-/// <reference path="qunit.d.ts" />
-/// <reference path="lib/Fayde/Fayde.d.ts" />
-
 declare var require;
 module runner {
     var testModules = [

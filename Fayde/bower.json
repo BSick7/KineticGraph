@@ -8,5 +8,8 @@
     "test",
     "testsite",
     "Gruntfile.js"
-  ]
+  ],
+  "dependencies": {
+    "fayde": "~0.12.0"
+  }
 }

@@ -13,3 +13,5 @@ Fayde/node_modules/
 Fayde/testsite/lib/
 Fayde/test/lib/
 Fayde/testsite/.build/
+.idea/
+Fayde/lib/

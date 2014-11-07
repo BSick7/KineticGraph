@@ -5,9 +5,11 @@ var version = require('./build/version'),
 
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-typescript');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-symlink');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-nuget');
@@ -39,17 +41,52 @@ module.exports = function (grunt) {
         meta: meta,
         dirs: dirs,
         pkg: grunt.file.readJSON('./package.json'),
+        clean: {
+            bower: ['./lib'],
+            testsite: ['./testsite/lib'],
+            test: ['./test/lib']
+        },
         setup: {
+            fayde: {
+                cwd: '.'
+            }
+        },
+        symlink: {
+            options: {
+                overwrite: true
+            },
             test: {
-                cwd: dirs.test.root
+                files: [
+                    { src: './lib/qunit', dest: '<%= dirs.test.root %>/lib/qunit' },
+                    { src: './lib/requirejs', dest: '<%= dirs.test.root %>/lib/requirejs' },
+                    { src: './lib/requirejs-text', dest: '<%= dirs.test.root %>/lib/requirejs-text' },
+                    { src: './lib/minerva', dest: '<%= dirs.test.root %>/lib/minerva' },
+                    { src: './lib/fayde', dest: '<%= dirs.test.root %>/lib/fayde' },
+                    { src: './themes', dest: '<%= dirs.test.root %>/lib/Fayde.KineticGraph/themes' },
+                    { src: './Fayde.KineticGraph.js', dest: '<%= dirs.test.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.js' },
+                    { src: './Fayde.KineticGraph.d.ts', dest: '<%= dirs.test.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.d.ts' },
+                    { src: './Fayde.KineticGraph.js.map', dest: '<%= dirs.test.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.js.map' },
+                    { src: './src', dest: '<%= dirs.test.root %>/lib/Fayde.KineticGraph/src' }
+                ]
             },
             testsite: {
-                cwd: dirs.testsite.root
+                files: [
+                    { src: './lib/qunit', dest: '<%= dirs.testsite.root %>/lib/qunit' },
+                    { src: './lib/requirejs', dest: '<%= dirs.testsite.root %>/lib/requirejs' },
+                    { src: './lib/requirejs-text', dest: '<%= dirs.testsite.root %>/lib/requirejs-text' },
+                    { src: './lib/minerva', dest: '<%= dirs.testsite.root %>/lib/minerva' },
+                    { src: './lib/fayde', dest: '<%= dirs.testsite.root %>/lib/fayde' },
+                    { src: './themes', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/themes' },
+                    { src: './Fayde.KineticGraph.js', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.js' },
+                    { src: './Fayde.KineticGraph.d.ts', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.d.ts' },
+                    { src: './Fayde.KineticGraph.js.map', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/Fayde.KineticGraph.js.map' },
+                    { src: './src', dest: '<%= dirs.testsite.root %>/lib/Fayde.KineticGraph/src' }
+                ]
             }
         },
         typescript: {
             build: {
-                src: ['src/_Version.ts', 'src/*.ts', 'src/**/*.ts'],
+                src: ['src/_Version.ts', 'src/*.ts', 'src/**/*.ts', 'lib/**/*.d.ts'],
                 dest: '<%= meta.name %>.js',
                 options: {
                     target: 'es5',
@@ -58,7 +95,7 @@ module.exports = function (grunt) {
                 }
             },
             test: {
-                src: ['<%= dirs.test.root %>/**/*.ts', '!<%= dirs.test.root %>/lib/**/*.ts'],
+                src: ['<%= dirs.test.root %>/**/*.ts', '!<%= dirs.test.root %>/lib/**/*.ts', 'lib/**/*.d.ts'],
                 options: {
                     target: 'es5',
                     module: 'amd',
@@ -66,7 +103,7 @@ module.exports = function (grunt) {
                 }
             },
             testsite: {
-                src: ['<%= dirs.testsite.root %>/**/*.ts', '!<%= dirs.testsite.root %>/lib/**/*.ts'],
+                src: ['<%= dirs.testsite.root %>/**/*.ts', '!<%= dirs.testsite.root %>/lib/**/*.ts', 'lib/**/*.d.ts'],
                 dest: '<%= dirs.testsite.build %>',
                 options: {
                     basePath: dirs.testsite.root,
@@ -74,22 +111,6 @@ module.exports = function (grunt) {
                     module: 'amd',
                     sourceMap: true
                 }
-            }
-        },
-        copy: {
-            pretest: {
-                files: [
-                    { expand: true, flatten: true, src: ['Themes/*'], dest: '<%= dirs.test.root %>/lib/<%= meta.name %>/Themes', filter: 'isFile' },
-                    { expand: true, flatten: true, src: ['<%= meta.name %>.js'], dest: '<%= dirs.test.root %>/lib/<%= meta.name %>', filter: 'isFile' },
-                    { expand: true, flatten: true, src: ['<%= meta.name %>.d.ts'], dest: '<%= dirs.test.root %>/lib/<%= meta.name %>', filter: 'isFile' }
-                ]
-            },
-            pretestsite: {
-                files: [
-                    { expand: true, flatten: true, src: ['Themes/*'], dest: '<%= dirs.testsite.root %>/lib/<%= meta.name %>/Themes', filter: 'isFile' },
-                    { expand: true, flatten: true, src: ['<%= meta.name %>.js'], dest: '<%= dirs.testsite.root %>/lib/<%= meta.name %>', filter: 'isFile' },
-                    { expand: true, flatten: true, src: ['<%= meta.name %>.d.ts'], dest: '<%= dirs.testsite.root %>/lib/<%= meta.name %>', filter: 'isFile' }
-                ]
             }
         },
         qunit: {
@@ -166,10 +187,11 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', ['version:apply', 'typescript:build']);
-    grunt.registerTask('test', ['setup:test', 'version:apply', 'typescript:build', 'copy:pretest', 'typescript:test', 'qunit']);
-    grunt.registerTask('testsite', ['setup:testsite', 'version:apply', 'typescript:build', 'copy:pretestsite', 'typescript:testsite', 'connect', 'open', 'watch']);
+    grunt.registerTask('test', ['version:apply', 'typescript:build', 'typescript:test', 'qunit']);
+    grunt.registerTask('testsite', ['version:apply', 'typescript:build', 'typescript:testsite', 'connect', 'open', 'watch']);
     setup(grunt);
     version(grunt);
     grunt.registerTask('package', ['nugetpack:dist']);
     grunt.registerTask('publish', ['nugetpack:dist', 'nugetpush:dist']);
+    grunt.registerTask('lib:reset', ['clean', 'setup', 'symlink:test', 'symlink:testsite']);
 };

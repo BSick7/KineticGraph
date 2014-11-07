@@ -1,5 +1,3 @@
-/// <reference path="../lib/Fayde/Fayde.d.ts" />
-
 import TestNode = require('../Models/TestNode');
 import TestEdge = require('../Models/TestEdge');
 

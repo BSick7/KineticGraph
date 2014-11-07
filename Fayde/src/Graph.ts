@@ -11,6 +11,8 @@ module Fayde.KineticGraph {
     var MIN_ALLOWED_REPULSION = 10.0;
     var MIN_ALLOWED_SPRING_TENSION = 0.0001;
 
+    import Point = minerva.Point;
+
     export class Graph extends Fayde.Controls.Canvas implements Fayde.ITimerListener {
         private _Engine = new Physics.Engine();
 
@@ -189,9 +191,8 @@ module Fayde.KineticGraph {
         private Graph_MouseMove (sender: any, e: Fayde.Input.MouseEventArgs) {
             if (this._IsDragging) {
                 var curPos = e.GetPosition(this);
-                var delta = new Point(curPos.X - this._LastPos.X, curPos.Y - this._LastPos.Y);
-                this._CanvasTranslate.X += delta.X;
-                this._CanvasTranslate.Y += delta.Y;
+                this._CanvasTranslate.X += (curPos.x - this._LastPos.x);
+                this._CanvasTranslate.Y += (curPos.y - this._LastPos.y);
                 this._LastPos = curPos;
             }
         }
@@ -205,8 +206,8 @@ module Fayde.KineticGraph {
         }
 
         private Graph_SizeChanged (sender: any, e: Fayde.SizeChangedEventArgs) {
-            var dw = e.NewSize.Width - e.PreviousSize.Width;
-            var dh = e.NewSize.Height - e.PreviousSize.Height;
+            var dw = e.NewSize.width - e.PreviousSize.width;
+            var dh = e.NewSize.height - e.PreviousSize.height;
             this._CanvasTranslate.X += dw / 2.0;
             this._CanvasTranslate.Y += dh / 2.0;
         }
