@@ -81,6 +81,7 @@
     <Compile Include="..\WickedSick.KineticGraph.Controls\Physics\ForceHelper.cs">
       <Link>Physics\ForceHelper.cs</Link>
     </Compile>
+    <Compile Include="FrameworkElementEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

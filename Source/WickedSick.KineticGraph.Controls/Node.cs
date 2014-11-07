@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace WickedSick.KineticGraph.Controls
 {
-    internal class Node : Canvas
+    public class Node : Canvas
     {
         internal ILinkable Linkable { get; set; }
         internal NodeState PhysicalState { get; set; }
@@ -31,6 +32,8 @@ namespace WickedSick.KineticGraph.Controls
             MouseMove += Node_MouseMove;
             LostMouseCapture += Node_LostMouseCapture;
         }
+
+        internal Graph Graph { get; set; }
 
 #if SILVERLIGHT
         public DependencyObject VisualParent
@@ -81,6 +84,39 @@ namespace WickedSick.KineticGraph.Controls
             var obj = ManualMovement;
             if (obj != null)
                 obj(this, new EventArgs());
+        }
+
+        #endregion
+
+        #region IsSelected Property
+
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
+            "IsSelected", typeof(bool), typeof(Node), new PropertyMetadata((d, args) => (d as Node).OnIsSelectedChanged(args)));
+
+        public bool IsSelected
+        {
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
+        }
+
+        private void OnIsSelectedChanged(DependencyPropertyChangedEventArgs args)
+        {
+            if (args.OldValue == args.NewValue)
+                return;
+            if (args.NewValue is bool)
+            {
+                if ((bool)args.NewValue)
+                {
+                    Debug.WriteLine("Highlight me!");
+                }
+                else
+                {
+                    Debug.WriteLine("Unhighlight me!");
+                }
+            }
+
+            if (Graph != null)
+                Graph.SetCurrentValue(Graph.SelectedNodeProperty, this);
         }
 
         #endregion

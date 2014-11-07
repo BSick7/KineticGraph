@@ -249,6 +249,26 @@ namespace WickedSick.KineticGraph.Controls
 
         #endregion
 
+        #region SelectedNodeProperty
+
+        public static readonly DependencyProperty SelectedNodeProperty = DependencyProperty.Register(
+            "SelectedNode", typeof(Node), typeof(Graph), new PropertyMetadata((d, args) => (d as Graph).OnSelectedNodeChanged(args)));
+
+        public Node SelectedNode
+        {
+            get { return (Node)GetValue(SelectedNodeProperty); }
+            set { SetValue(SelectedNodeProperty, value); }
+        }
+
+        private void OnSelectedNodeChanged(DependencyPropertyChangedEventArgs args)
+        {
+            var oldNode = args.OldValue as Node;
+            if (oldNode != null && oldNode.IsSelected)
+                oldNode.SetCurrentValue(Node.IsSelectedProperty, false);
+        }
+
+        #endregion
+
         #endregion
 
         public void ResetMovement()
@@ -358,6 +378,7 @@ namespace WickedSick.KineticGraph.Controls
         private Node AddNode(ILinkable newLinkable)
         {
             var node = new Node { Linkable = newLinkable, };
+            node.Graph = this;
             Nodes.Add(node);
             _Surface.Children.Add(node);
             node.ManualMovement += node_ManualMovement;
@@ -379,6 +400,7 @@ namespace WickedSick.KineticGraph.Controls
             if (existing == null)
                 return;
             existing.ManualMovement -= node_ManualMovement;
+            existing.Graph = null;
             _Surface.Children.Remove(existing);
             Nodes.Remove(existing);
             _Engine.Disturb();
@@ -388,6 +410,7 @@ namespace WickedSick.KineticGraph.Controls
             var nodes = Nodes.ToList();
             foreach (var node in nodes)
             {
+                node.Graph = null;
                 _Surface.Children.Remove(node);
                 Nodes.Remove(node);
             }
