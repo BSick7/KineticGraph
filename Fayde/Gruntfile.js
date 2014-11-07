@@ -90,7 +90,14 @@ module.exports = function (grunt) {
         },
         typescript: {
             build: {
-                src: ['src/_Version.ts', 'src/*.ts', 'src/**/*.ts', 'lib/**/*.d.ts'],
+                src: [
+                    'typings/*.d.ts',
+                    'lib/minerva/minerva.d.ts',
+                    'lib/fayde/fayde.d.ts',
+                    'src/_Version.ts',
+                    'src/*.ts',
+                    'src/**/*.ts'
+                ],
                 dest: '<%= meta.name %>.js',
                 options: {
                     target: 'es5',
@@ -99,7 +106,13 @@ module.exports = function (grunt) {
                 }
             },
             test: {
-                src: ['<%= dirs.test.root %>/**/*.ts', '!<%= dirs.test.root %>/lib/**/*.ts', 'lib/**/*.d.ts'],
+                src: [
+                    'typings/*.d.ts',
+                    'lib/minerva/minerva.d.ts',
+                    'lib/fayde/fayde.d.ts',
+                    '<%= dirs.test.root %>/**/*.ts',
+                    '!<%= dirs.test.root %>/lib/**/*.ts'
+                ],
                 options: {
                     target: 'es5',
                     module: 'amd',
@@ -107,7 +120,13 @@ module.exports = function (grunt) {
                 }
             },
             testsite: {
-                src: ['<%= dirs.testsite.root %>/**/*.ts', '!<%= dirs.testsite.root %>/lib/**/*.ts', 'lib/**/*.d.ts'],
+                src: [
+                    'typings/*.d.ts',
+                    'lib/minerva/minerva.d.ts',
+                    'lib/fayde/fayde.d.ts',
+                    '<%= dirs.testsite.root %>/**/*.ts',
+                    '!<%= dirs.testsite.root %>/lib/**/*.ts'
+                ],
                 dest: '<%= dirs.testsite.build %>',
                 options: {
                     basePath: dirs.testsite.root,

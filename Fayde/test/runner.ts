@@ -1,4 +1,3 @@
-declare var require;
 module runner {
     var testModules = [
         "tests/test1"
