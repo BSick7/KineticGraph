@@ -1,5 +1,3 @@
-/// <reference path="../lib/Fayde.KineticGraph/Fayde.KineticGraph.d.ts" />
-
 import ILinkable = Fayde.KineticGraph.ILinkable;
 
 class TestEdge {

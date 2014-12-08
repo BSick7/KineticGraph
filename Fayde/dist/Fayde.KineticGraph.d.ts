@@ -40,49 +40,49 @@ declare module Fayde.KineticGraph.Physics {
         private _Edges;
         private _IsGraphStabilized;
         private _IsGraphDisturbed;
-        public Repulsion: number;
-        public SpringTension: number;
-        public GraphStabilized: MulticastEvent<EventArgs>;
-        public GraphStabilizing: MulticastEvent<EventArgs>;
-        public Attach(nodes: INode[], edges: IEdge[]): void;
-        public Step(): void;
-        public ApplyForces(): number;
-        public Disturb(): void;
+        Repulsion: number;
+        SpringTension: number;
+        GraphStabilized: nullstone.Event<{}>;
+        GraphStabilizing: nullstone.Event<{}>;
+        Attach(nodes: INode[], edges: IEdge[]): void;
+        Step(): void;
+        ApplyForces(): number;
+        Disturb(): void;
     }
 }
 declare module Fayde.KineticGraph {
     class EdgeCanvas extends Controls.Canvas implements Physics.IEdge {
-        public Source: Physics.INode;
-        public Sink: Physics.INode;
+        Source: Physics.INode;
+        Sink: Physics.INode;
         private _IsBidirectional;
-        public IsBidirectional : boolean;
+        IsBidirectional: boolean;
         private _Line;
         private _Triangle;
-        public Left : number;
-        public Top : number;
+        Left: number;
+        Top: number;
         constructor();
-        public UpdatePosition(): void;
+        UpdatePosition(): void;
     }
 }
 declare module Fayde.KineticGraph {
     class NodeCanvas extends Controls.Canvas implements Physics.INode {
         private _Linkable;
-        public Linkable : ILinkable;
-        public PhysicalState: Physics.INodeState;
-        public Degree: number;
-        public Graph: Graph;
+        Linkable: ILinkable;
+        PhysicalState: Physics.INodeState;
+        Degree: number;
+        Graph: Graph;
         private _Circle;
         private _TextBlock;
         static IsSelectedProperty: DependencyProperty;
-        public IsSelected: boolean;
+        IsSelected: boolean;
         private OnIsSelectedChanged(args);
         static RadiusProperty: DependencyProperty;
-        public Radius: number;
+        Radius: number;
         private OnRadiusChanged(args);
-        public ManualMovement: MulticastEvent<EventArgs>;
+        ManualMovement: nullstone.Event<{}>;
         constructor();
-        public UpdatePosition(): void;
-        public SetDisplayMemberPath(path: string): void;
+        UpdatePosition(): void;
+        SetDisplayMemberPath(path: string): void;
         private TextBlock_SizeChanged(sender, e);
         private UpdateMarkers();
         private _LastPos;
@@ -115,14 +115,14 @@ declare module Fayde.KineticGraph {
         static SpringTensionProperty: DependencyProperty;
         static NodeDisplayMemberPathProperty: DependencyProperty;
         static NodeWeightPathProperty: DependencyProperty;
-        public IsBidirectional: boolean;
-        public SelectedNode: NodeCanvas;
-        public NodesSource: IEnumerable<ILinkable>;
-        public EdgesSource: IEnumerable<ILinkableEdge>;
-        public Repulsion: number;
-        public SpringTension: number;
-        public NodeDisplayMemberPath: string;
-        public NodeWeightPath: string;
+        IsBidirectional: boolean;
+        SelectedNode: NodeCanvas;
+        NodesSource: nullstone.IEnumerable<ILinkable>;
+        EdgesSource: nullstone.IEnumerable<ILinkableEdge>;
+        Repulsion: number;
+        SpringTension: number;
+        NodeDisplayMemberPath: string;
+        NodeWeightPath: string;
         private OnIsBidirectionalChanged(args);
         private OnSelectedNodeChanged(args);
         private OnNodesSourceChanged(args);
@@ -135,7 +135,7 @@ declare module Fayde.KineticGraph {
         private OnNodeWeightPathChanged(args);
         private SetNodeWeightPath(nodeCanvas, path);
         constructor();
-        public OnTicked(lastTime: number, nowTime: number): void;
+        OnTicked(lastTime: number, nowTime: number): void;
         private _LastPos;
         private _IsDragging;
         private Graph_MouseLeftButtonDown(sender, e);
@@ -143,8 +143,8 @@ declare module Fayde.KineticGraph {
         private Graph_MouseLeftButtonUp(sender, e);
         private Graph_LostMouseCapture(sender, e);
         private Graph_SizeChanged(sender, e);
-        public ResetMovement(): void;
-        public Center(): void;
+        ResetMovement(): void;
+        Center(): void;
         private _LastVisualTick;
         private UpdateVisuals();
         private AddEdges(newEdges);

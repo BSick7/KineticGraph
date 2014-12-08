@@ -3,5 +3,9 @@
     "Fayde.KineticGraph": {
       "exports": "Fayde.KineticGraph"
     }
+  },
+  "themes": {
+    "Fayde.KineticGraph": {
+    }
   }
 }

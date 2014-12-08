@@ -30,8 +30,8 @@ module Fayde.KineticGraph.Physics {
         Repulsion = 300.0;
         SpringTension = 0.9 * 0.001;
 
-        GraphStabilized = new MulticastEvent<EventArgs>();
-        GraphStabilizing = new MulticastEvent<EventArgs>();
+        GraphStabilized = new nullstone.Event();
+        GraphStabilizing = new nullstone.Event();
 
         Attach(nodes: INode[], edges: IEdge[]) {
             this._Nodes = nodes;
@@ -47,7 +47,7 @@ module Fayde.KineticGraph.Physics {
             if (KE_THRESHOLD <= avgKE) {
                 if (this._IsGraphStabilized) {
                     this._IsGraphStabilized = false;
-                    this.GraphStabilizing.Raise(this, EventArgs.Empty);
+                    this.GraphStabilizing.raise(this, null);
                 }
                 for (var i = 0; i < numIterations; i++) {
                     this._KE = this.ApplyForces();
@@ -55,13 +55,13 @@ module Fayde.KineticGraph.Physics {
             } else if (this._IsGraphDisturbed) {
                 if (this._IsGraphStabilized) {
                     this._IsGraphStabilized = false;
-                    this.GraphStabilizing.Raise(this, EventArgs.Empty);
+                    this.GraphStabilizing.raise(this, null);
                 }
                 this._KE = this.ApplyForces();
                 this._IsGraphDisturbed = false;
             } else if (!this._IsGraphStabilized) {
                 this._IsGraphStabilized = true;
-                this.GraphStabilized.Raise(this, EventArgs.Empty);
+                this.GraphStabilized.raise(this, null);
             }
         }
         ApplyForces() {

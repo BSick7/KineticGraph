@@ -24,19 +24,19 @@ module Fayde.KineticGraph {
         private Nodes: NodeCanvas[] = [];
         private Edges: EdgeCanvas[] = [];
 
-        static IsBidirectionalProperty = DependencyProperty.Register("IsBidirectional", () => Boolean, Graph, false, (d, args) => (<Graph>d).OnIsBidirectionalChanged(args));
-        static SelectedNodeProperty = DependencyProperty.Register("SelectedNode", () => NodeCanvas, Graph, undefined, (d, args) => (<Graph>d).OnSelectedNodeChanged(args));
-        static NodesSourceProperty = DependencyProperty.Register("NodesSource", () => Fayde.IEnumerable_, Graph, undefined, (d, args) => (<Graph>d).OnNodesSourceChanged(args));
-        static EdgesSourceProperty = DependencyProperty.Register("EdgesSource", () => Fayde.IEnumerable_, Graph, undefined, (d, args) => (<Graph>d).OnEdgesSourceChanged(args));
-        static RepulsionProperty = DependencyProperty.Register("Repulsion", () => Number, Graph, 300.0, (d, args) => (<Graph>d).OnRepulsionChanged(args));
-        static SpringTensionProperty = DependencyProperty.Register("SpringTension", () => Number, Graph, 0.0009, (d, args) => (<Graph>d).OnSpringTensionChanged(args));
-        static NodeDisplayMemberPathProperty = DependencyProperty.Register("NodeDisplayMemberPath", () => String, Graph, undefined, (d, args) => (<Graph>d).OnNodeDisplayMemberPathChanged(args));
-        static NodeWeightPathProperty = DependencyProperty.Register("NodeWeightPath", () => String, Graph, undefined, (d, args) => (<Graph>d).OnNodeWeightPathChanged(args));
+        static IsBidirectionalProperty = DependencyProperty.Register("IsBidirectional", () => Boolean, Graph, false, (d: Graph, args) => d.OnIsBidirectionalChanged(args));
+        static SelectedNodeProperty = DependencyProperty.Register("SelectedNode", () => NodeCanvas, Graph, undefined, (d: Graph, args) => d.OnSelectedNodeChanged(args));
+        static NodesSourceProperty = DependencyProperty.Register("NodesSource", () => nullstone.IEnumerable_, Graph, undefined, (d: Graph, args) => d.OnNodesSourceChanged(args));
+        static EdgesSourceProperty = DependencyProperty.Register("EdgesSource", () => nullstone.IEnumerable_, Graph, undefined, (d: Graph, args) => d.OnEdgesSourceChanged(args));
+        static RepulsionProperty = DependencyProperty.Register("Repulsion", () => Number, Graph, 300.0, (d: Graph, args) => d.OnRepulsionChanged(args));
+        static SpringTensionProperty = DependencyProperty.Register("SpringTension", () => Number, Graph, 0.0009, (d: Graph, args) => d.OnSpringTensionChanged(args));
+        static NodeDisplayMemberPathProperty = DependencyProperty.Register("NodeDisplayMemberPath", () => String, Graph, undefined, (d: Graph, args) => d.OnNodeDisplayMemberPathChanged(args));
+        static NodeWeightPathProperty = DependencyProperty.Register("NodeWeightPath", () => String, Graph, undefined, (d: Graph, args) => d.OnNodeWeightPathChanged(args));
 
         IsBidirectional: boolean;
         SelectedNode: NodeCanvas;
-        NodesSource: Fayde.IEnumerable<ILinkable>;
-        EdgesSource: Fayde.IEnumerable<ILinkableEdge>;
+        NodesSource: nullstone.IEnumerable<ILinkable>;
+        EdgesSource: nullstone.IEnumerable<ILinkableEdge>;
         Repulsion: number;
         SpringTension: number;
         NodeDisplayMemberPath: string;
@@ -44,10 +44,7 @@ module Fayde.KineticGraph {
 
         private OnIsBidirectionalChanged (args: IDependencyPropertyChangedEventArgs) {
             var isb = args.NewValue === true;
-            var enumerator = Fayde.ArrayEx.GetEnumerator(this.Edges);
-            while (enumerator.moveNext()) {
-                enumerator.current.IsBidirectional = isb;
-            }
+            this.Edges.forEach(e => e.IsBidirectional = isb);
         }
 
         private OnSelectedNodeChanged (args: IDependencyPropertyChangedEventArgs) {
@@ -57,15 +54,15 @@ module Fayde.KineticGraph {
         }
 
         private OnNodesSourceChanged (args: IDependencyPropertyChangedEventArgs) {
-            var oldNC = Fayde.Collections.INotifyCollectionChanged_.As(args.OldValue);
+            var oldNC = Fayde.Collections.INotifyCollectionChanged_.as(args.OldValue);
             if (oldNC)
-                oldNC.CollectionChanged.Unsubscribe(this.NodesSource_CollectionChanged, this);
+                oldNC.CollectionChanged.off(this.NodesSource_CollectionChanged, this);
             this.RemoveNodes(coerceToArray(args.OldValue));
 
             this.AddNodes(coerceToArray(args.NewValue));
-            var newNC = Fayde.Collections.INotifyCollectionChanged_.As(args.NewValue);
+            var newNC = Fayde.Collections.INotifyCollectionChanged_.as(args.NewValue);
             if (newNC)
-                newNC.CollectionChanged.Subscribe(this.NodesSource_CollectionChanged, this);
+                newNC.CollectionChanged.on(this.NodesSource_CollectionChanged, this);
         }
 
         private NodesSource_CollectionChanged (sender: any, e: Fayde.Collections.CollectionChangedEventArgs) {
@@ -87,15 +84,15 @@ module Fayde.KineticGraph {
         }
 
         private OnEdgesSourceChanged (args: IDependencyPropertyChangedEventArgs) {
-            var oldNC = Fayde.Collections.INotifyCollectionChanged_.As(args.OldValue);
+            var oldNC = Fayde.Collections.INotifyCollectionChanged_.as(args.OldValue);
             if (oldNC)
-                oldNC.CollectionChanged.Unsubscribe(this.EdgesSource_CollectionChanged, this);
+                oldNC.CollectionChanged.off(this.EdgesSource_CollectionChanged, this);
             this.RemoveNodes(coerceToArray(args.OldValue));
 
             this.AddEdges(coerceToArray(args.NewValue));
-            var newNC = Fayde.Collections.INotifyCollectionChanged_.As(args.NewValue);
+            var newNC = Fayde.Collections.INotifyCollectionChanged_.as(args.NewValue);
             if (newNC)
-                newNC.CollectionChanged.Subscribe(this.EdgesSource_CollectionChanged, this);
+                newNC.CollectionChanged.on(this.EdgesSource_CollectionChanged, this);
         }
 
         private EdgesSource_CollectionChanged (sender: any, e: Fayde.Collections.CollectionChangedEventArgs) {
@@ -132,18 +129,12 @@ module Fayde.KineticGraph {
 
         private OnNodeDisplayMemberPathChanged (args: IDependencyPropertyChangedEventArgs) {
             var path = args.NewValue || "";
-            var enumerator = Fayde.ArrayEx.GetEnumerator(this.Nodes);
-            while (enumerator.moveNext()) {
-                enumerator.current.SetDisplayMemberPath(path);
-            }
+            this.Nodes.forEach(n => n.SetDisplayMemberPath(path));
         }
 
         private OnNodeWeightPathChanged (args: IDependencyPropertyChangedEventArgs) {
             var path = args.NewValue || "";
-            var enumerator = Fayde.ArrayEx.GetEnumerator(this.Nodes);
-            while (enumerator.moveNext()) {
-                this.SetNodeWeightPath(enumerator.current, path);
-            }
+            this.Nodes.forEach(n => this.SetNodeWeightPath(n, path));
         }
 
         private SetNodeWeightPath (nodeCanvas: NodeCanvas, path: string) {
@@ -163,11 +154,11 @@ module Fayde.KineticGraph {
             bg.Color = Color.KnownColors.Transparent;
             this.Background = bg;
 
-            this.MouseLeftButtonDown.Subscribe(this.Graph_MouseLeftButtonDown, this);
-            this.MouseLeftButtonUp.Subscribe(this.Graph_MouseLeftButtonUp, this);
-            this.MouseMove.Subscribe(this.Graph_MouseMove, this);
-            this.LostMouseCapture.Subscribe(this.Graph_LostMouseCapture, this);
-            this.SizeChanged.Subscribe(this.Graph_SizeChanged, this);
+            this.MouseLeftButtonDown.on(this.Graph_MouseLeftButtonDown, this);
+            this.MouseLeftButtonUp.on(this.Graph_MouseLeftButtonUp, this);
+            this.MouseMove.on(this.Graph_MouseMove, this);
+            this.LostMouseCapture.on(this.Graph_LostMouseCapture, this);
+            this.SizeChanged.on(this.Graph_SizeChanged, this);
 
             this._Timer = new Fayde.ClockTimer();
             this._Timer.RegisterTimer(this);
@@ -225,10 +216,8 @@ module Fayde.KineticGraph {
             var totX = 0.0;
             var totY = 0.0;
 
-            var enumerator = Fayde.ArrayEx.GetEnumerator(nodes);
-            var node: NodeCanvas;
-            while (enumerator.moveNext()) {
-                node = enumerator.current;
+            for (var en = nullstone.IEnumerator_.fromArray(nodes); en.moveNext();) {
+                var node = en.current;
                 totX += node.PhysicalState.Position.X;
                 totY += node.PhysicalState.Position.Y;
             }
@@ -244,15 +233,8 @@ module Fayde.KineticGraph {
                 return;
             this._LastVisualTick = now;
 
-            var enumerator = Fayde.ArrayEx.GetEnumerator(this.Nodes);
-            while (enumerator.moveNext()) {
-                enumerator.current.UpdatePosition();
-            }
-
-            var enumerator2 = Fayde.ArrayEx.GetEnumerator(this.Edges);
-            while (enumerator2.moveNext()) {
-                enumerator2.current.UpdatePosition();
-            }
+            this.Nodes.forEach(n => n.UpdatePosition());
+            this.Edges.forEach(e => e.UpdatePosition());
         }
 
 
@@ -305,10 +287,7 @@ module Fayde.KineticGraph {
         }
 
         private ClearEdges () {
-            var enumerator = Fayde.ArrayEx.GetEnumerator(this.Edges);
-            while (enumerator.moveNext()) {
-                this.Children.Remove(enumerator.current);
-            }
+            this.Edges.forEach(e => this.Children.Remove(e));
             this.Edges = [];
             this._Engine.Disturb();
         }
@@ -346,7 +325,7 @@ module Fayde.KineticGraph {
             node.Graph = this;
             this.Nodes.push(node);
             this.Children.Add(node);
-            node.ManualMovement.Subscribe(this.Node_ManualMovement, this);
+            node.ManualMovement.on(this.Node_ManualMovement, this);
             node.PhysicalState.Position = this._GetRandomVector();
             node.SetDisplayMemberPath(this.NodeDisplayMemberPath);
             this.SetNodeWeightPath(node, this.NodeWeightPath);
@@ -367,21 +346,18 @@ module Fayde.KineticGraph {
             if (index < 0)
                 return;
             var existing = this.Nodes.splice(index, 1)[0];
-            existing.ManualMovement.Unsubscribe(this.Node_ManualMovement, this);
+            existing.ManualMovement.off(this.Node_ManualMovement, this);
             existing.Graph = null;
             this.Children.Remove(existing);
             this._Engine.Disturb();
         }
 
         private ClearNodes () {
-            var enumerator = Fayde.ArrayEx.GetEnumerator(this.Nodes);
-            var node: NodeCanvas;
-            while (enumerator.moveNext()) {
-                node = enumerator.current;
-                node.ManualMovement.Unsubscribe(this.Node_ManualMovement, this);
-                node.Graph = null;
-                this.Children.Remove(node);
-            }
+            this.Nodes.forEach(n => {
+                n.ManualMovement.off(this.Node_ManualMovement, this);
+                n.Graph = null;
+                this.Children.Remove(n);
+            });
             this.Nodes = [];
             this._Engine.Disturb();
         }
@@ -396,7 +372,7 @@ module Fayde.KineticGraph {
             return -1;
         }
 
-        private Node_ManualMovement (sender: any, e: EventArgs) {
+        private Node_ManualMovement (sender: any, e: any) {
             this._Engine.Disturb();
         }
 
@@ -407,7 +383,7 @@ module Fayde.KineticGraph {
             var height = this.ActualHeight;
             if (height <= 0)
                 height = 100;
-            return { X: randomInt(0, width), Y: randomInt(0, height) };
+            return {X: randomInt(0, width), Y: randomInt(0, height)};
         }
     }
 
@@ -418,7 +394,7 @@ module Fayde.KineticGraph {
     function coerceToArray (obj: any): any[] {
         if (obj instanceof Array)
             return obj;
-        var en = IEnumerable_.As(obj);
+        var en = nullstone.IEnumerable_.as(obj);
         if (en) {
             var arr = [];
             for (var e = en.getEnumerator(); e.moveNext();) {

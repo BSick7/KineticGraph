@@ -50,17 +50,17 @@ module Fayde.KineticGraph {
             this.UpdateMarkers();
         }
 
-        ManualMovement = new MulticastEvent<EventArgs>();
+        ManualMovement = new nullstone.Event();
 
         constructor() {
             super();
 
             this.PhysicalState = new NodeState();
 
-            this.MouseLeftButtonDown.Subscribe(this.Node_MouseLeftButtonDown, this);
-            this.MouseLeftButtonUp.Subscribe(this.Node_MouseLeftButtonUp, this);
-            this.MouseMove.Subscribe(this.Node_MouseMove, this);
-            this.LostMouseCapture.Subscribe(this.Node_LostMouseCapture, this);
+            this.MouseLeftButtonDown.on(this.Node_MouseLeftButtonDown, this);
+            this.MouseLeftButtonUp.on(this.Node_MouseLeftButtonUp, this);
+            this.MouseMove.on(this.Node_MouseMove, this);
+            this.LostMouseCapture.on(this.Node_LostMouseCapture, this);
 
             var circle = this._Circle;
             circle.Fill = new Fayde.Media.SolidColorBrush(Color.FromRgba(128, 128, 128, 0.5));
@@ -70,7 +70,7 @@ module Fayde.KineticGraph {
             
             var tb = this._TextBlock;
             tb.SetBinding(Fayde.Controls.TextBlock.TextProperty, new Fayde.Data.Binding(""));
-            tb.SizeChanged.Subscribe(this.TextBlock_SizeChanged, this);
+            tb.SizeChanged.on(this.TextBlock_SizeChanged, this);
             this.Children.Add(tb);
         }
 
@@ -118,7 +118,7 @@ module Fayde.KineticGraph {
         private Node_LostMouseCapture(sender: any, e: Fayde.Input.MouseEventArgs) {
             this.PhysicalState.IsFrozen = false;
             this._IsDragging = false;
-            this.ManualMovement.Raise(this, EventArgs.Empty);
+            this.ManualMovement.raise(this, null);
         }
     }
 }
