@@ -7,5 +7,9 @@
   "themes": {
     "Fayde.KineticGraph": {
     }
+  },
+  "debug": {
+    "warnMissingThemes": false,
+    "warnBrokenPath": false
   }
 }
