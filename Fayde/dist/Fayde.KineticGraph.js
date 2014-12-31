@@ -2,7 +2,7 @@ var Fayde;
 (function (Fayde) {
     var KineticGraph;
     (function (KineticGraph) {
-        KineticGraph.Version = '0.2.0';
+        KineticGraph.Version = '0.3.0';
     })(KineticGraph = Fayde.KineticGraph || (Fayde.KineticGraph = {}));
 })(Fayde || (Fayde = {}));
 var Fayde;
