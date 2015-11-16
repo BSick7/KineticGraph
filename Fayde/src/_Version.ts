@@ -1,3 +1,3 @@
 module Fayde.KineticGraph {
-    export var Version = '0.3.0';
+    export var version = '0.4.0';
 }

@@ -1,3 +1,0 @@
-module Fayde.KineticGraph {
-    export var Version = '%VERSION%';
-}

@@ -2,7 +2,7 @@ var Fayde;
 (function (Fayde) {
     var KineticGraph;
     (function (KineticGraph) {
-        KineticGraph.Version = '0.3.0';
+        KineticGraph.version = '0.4.0';
     })(KineticGraph = Fayde.KineticGraph || (Fayde.KineticGraph = {}));
 })(Fayde || (Fayde = {}));
 var Fayde;
@@ -16,7 +16,6 @@ var Fayde;
             var ForceHelper = (function () {
                 function ForceHelper() {
                 }
-                /// Applies coulomb repulsion to both points
                 ForceHelper.ApplyCoulombRepulsion = function (a, b, k) {
                     var dx = a.Position.X - b.Position.X;
                     var dy = a.Position.Y - b.Position.Y;
@@ -24,11 +23,11 @@ var Fayde;
                     if (sqDist == 0)
                         return;
                     var d = Math.sqrt(sqDist);
-                    var mag = 1.0 / sqDist; // Force magnitude
-                    mag -= ForceHelper.AttractionConstant * d; // plus WEAK attraction
+                    var mag = 1.0 / sqDist;
+                    mag -= ForceHelper.AttractionConstant * d;
                     mag *= k;
                     if (mag > MAGNITUDE_MAX)
-                        mag = MAGNITUDE_MAX; // Clip maximum
+                        mag = MAGNITUDE_MAX;
                     var tempX = mag * (dx / d);
                     var tempY = mag * (dy / d);
                     if (!a.IsFrozen) {
@@ -134,18 +133,12 @@ var Fayde;
                         for (var j = i + 1; j < nodes.length; j++) {
                             var other = nodes[j];
                             var otherState = other.PhysicalState;
-                            /* Applies coulumb replusion to both nodes
-                             * The repulsion constant is modified dynamically based on the node vertex degree.
-                             * In a nutshell, lots of connected nodes --> more repulsion.
-                             * Increasing repulsion initial value will increase separation of a cluster.
-                             */
                             var log2degree = Math.log(other.Degree + 2) / Math.log(2);
                             var repulsion = this.Repulsion * log2degree;
                             repulsion *= (node.Radius + other.Radius) / 10.0;
                             Physics.ForceHelper.ApplyCoulombRepulsion(state, otherState, repulsion);
                         }
                     }
-                    //Hooke's attraction with every connected node
                     var tension = this.SpringTension;
                     for (var i = 0; i < edges.length; i++) {
                         var edge = edges[i];
@@ -155,12 +148,9 @@ var Fayde;
                         var state = nodes[i].PhysicalState;
                         if (state.IsFrozen)
                             continue;
-                        // Update velocity
                         state.Velocity.X = (state.Force.X * dT + state.Velocity.X) * damping;
                         state.Velocity.Y = (state.Force.Y * dT + state.Velocity.Y) * damping;
-                        // Update KE
                         totalKE += (state.Velocity.X * state.Velocity.X) + (state.Velocity.Y * state.Velocity.Y);
-                        // Update position
                         var temp = state.Position.X + state.Velocity.X * dT;
                         if (!isNaN(temp))
                             state.Position.X = temp;
@@ -180,11 +170,10 @@ var Fayde;
     })(KineticGraph = Fayde.KineticGraph || (Fayde.KineticGraph = {}));
 })(Fayde || (Fayde = {}));
 /// <reference path="Physics/Engine.ts" />
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Fayde;
 (function (Fayde) {
@@ -198,36 +187,26 @@ var Fayde;
                 this.IsHitTestVisible = false;
                 this.Children.Add(this._Line = buildLine());
                 this.Children.Add(this._Triangle = buildTriangle(5, 9));
-                this._Triangle.Visibility = this.IsBidirectional === true ? 0 /* Visible */ : 1 /* Collapsed */;
+                this._Triangle.Visibility = this.IsBidirectional === true ? Fayde.Visibility.Visible : Fayde.Visibility.Collapsed;
             }
             Object.defineProperty(EdgeCanvas.prototype, "IsBidirectional", {
-                get: function () {
-                    return this._IsBidirectional;
-                },
+                get: function () { return this._IsBidirectional; },
                 set: function (value) {
                     this._IsBidirectional = value;
-                    this._Triangle.Visibility = value === true ? 0 /* Visible */ : 1 /* Collapsed */;
+                    this._Triangle.Visibility = value === true ? Fayde.Visibility.Visible : Fayde.Visibility.Collapsed;
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(EdgeCanvas.prototype, "Left", {
-                get: function () {
-                    return this.GetValue(Fayde.Controls.Canvas.LeftProperty);
-                },
-                set: function (value) {
-                    this.SetValue(Fayde.Controls.Canvas.LeftProperty, value);
-                },
+                get: function () { return this.GetValue(Fayde.Controls.Canvas.LeftProperty); },
+                set: function (value) { this.SetValue(Fayde.Controls.Canvas.LeftProperty, value); },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(EdgeCanvas.prototype, "Top", {
-                get: function () {
-                    return this.GetValue(Fayde.Controls.Canvas.TopProperty);
-                },
-                set: function (value) {
-                    this.SetValue(Fayde.Controls.Canvas.TopProperty, value);
-                },
+                get: function () { return this.GetValue(Fayde.Controls.Canvas.TopProperty); },
+                set: function (value) { this.SetValue(Fayde.Controls.Canvas.TopProperty, value); },
                 enumerable: true,
                 configurable: true
             });
@@ -240,24 +219,20 @@ var Fayde;
                 if (isNaN(theta))
                     return;
                 var thetaRad = theta * (Math.PI / 180);
-                //double thetaRev = thetaRad - (Math.PI*2.0);
                 var sp = source == null ? a : getEdgeOfCircle(a, thetaRad, source.Radius, true);
                 var ep = sink == null ? b : getEdgeOfCircle(b, thetaRad, sink.Radius, false);
                 var x1 = Math.min(sp.X, ep.X);
                 var x2 = Math.max(sp.X, ep.X);
                 var y1 = Math.min(sp.Y, ep.Y);
                 var y2 = Math.max(sp.Y, ep.Y);
-                //Define boundaries
                 this.Left = x1;
                 this.Top = y1;
                 this.Width = x2 - x1;
                 this.Height = y2 - y1;
-                //Place line link on the correct corners of canvas
                 this._Line.X1 = ep.X > sp.X ? 0 : this.Width;
                 this._Line.Y1 = ep.Y > sp.Y ? 0 : this.Height;
                 this._Line.X2 = ep.X > sp.X ? this.Width : 0;
                 this._Line.Y2 = ep.Y > sp.Y ? this.Height : 0;
-                //Rotate the arrow then move it to the desired position
                 var tg = new Fayde.Media.TransformGroup();
                 var rt = new Fayde.Media.RotateTransform();
                 rt.Angle = theta;
@@ -297,7 +272,7 @@ var Fayde;
             var xDist = Math.abs(a.X - b.X);
             var yDist = Math.abs(a.Y - b.Y);
             var theta = Math.atan(yDist / xDist);
-            theta *= 180 / Math.PI; //convert to degrees
+            theta *= 180 / Math.PI;
             if (b.Y > a.Y)
                 return b.X >= a.X ? theta : 180 - theta;
             return b.X < a.X ? 180 + theta : 360 - theta;
@@ -356,9 +331,7 @@ var Fayde;
                 this.Children.Add(tb);
             }
             Object.defineProperty(NodeCanvas.prototype, "Linkable", {
-                get: function () {
-                    return this._Linkable;
-                },
+                get: function () { return this._Linkable; },
                 set: function (value) {
                     this._Linkable = value;
                     this.DataContext = value;
@@ -389,9 +362,7 @@ var Fayde;
             NodeCanvas.prototype.SetDisplayMemberPath = function (path) {
                 this._TextBlock.SetBinding(Fayde.Controls.TextBlock.TextProperty, new Fayde.Data.Binding(path));
             };
-            NodeCanvas.prototype.TextBlock_SizeChanged = function (sender, e) {
-                this.UpdateMarkers();
-            };
+            NodeCanvas.prototype.TextBlock_SizeChanged = function (sender, e) { this.UpdateMarkers(); };
             NodeCanvas.prototype.UpdateMarkers = function () {
                 var radius = this.Radius;
                 this._Circle.Width = 2 * radius;
@@ -489,16 +460,16 @@ var Fayde;
             };
             Graph.prototype.NodesSource_CollectionChanged = function (sender, e) {
                 switch (e.Action) {
-                    case 1 /* Add */:
+                    case Fayde.Collections.CollectionChangedAction.Add:
                         this.AddNodes(e.NewItems);
                         break;
-                    case 2 /* Remove */:
+                    case Fayde.Collections.CollectionChangedAction.Remove:
                         this.RemoveNodes(e.OldItems);
                         break;
-                    case 4 /* Reset */:
+                    case Fayde.Collections.CollectionChangedAction.Reset:
                         this.ClearNodes();
                         break;
-                    case 3 /* Replace */:
+                    case Fayde.Collections.CollectionChangedAction.Replace:
                         this.AddNodes(e.NewItems);
                         this.RemoveNodes(e.OldItems);
                         break;
@@ -516,16 +487,16 @@ var Fayde;
             };
             Graph.prototype.EdgesSource_CollectionChanged = function (sender, e) {
                 switch (e.Action) {
-                    case 1 /* Add */:
+                    case Fayde.Collections.CollectionChangedAction.Add:
                         this.AddEdges(e.NewItems);
                         break;
-                    case 2 /* Remove */:
+                    case Fayde.Collections.CollectionChangedAction.Remove:
                         this.RemoveEdges(e.OldItems);
                         break;
-                    case 4 /* Reset */:
+                    case Fayde.Collections.CollectionChangedAction.Reset:
                         this.ClearEdges();
                         break;
-                    case 3 /* Replace */:
+                    case Fayde.Collections.CollectionChangedAction.Replace:
                         this.AddEdges(e.NewItems);
                         this.RemoveEdges(e.OldItems);
                         break;
@@ -777,4 +748,5 @@ var Fayde;
         }
     })(KineticGraph = Fayde.KineticGraph || (Fayde.KineticGraph = {}));
 })(Fayde || (Fayde = {}));
+
 //# sourceMappingURL=Fayde.KineticGraph.js.map

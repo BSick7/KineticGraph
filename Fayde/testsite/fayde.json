@@ -1,12 +1,12 @@
 {
   "libs": {
     "Fayde.KineticGraph": {
-      "exports": "Fayde.KineticGraph"
+      "exports": "Fayde.KineticGraph",
+      "base": "lib/Fayde.KineticGraph"
     }
   },
   "themes": {
-    "Fayde.KineticGraph": {
-    }
+    "Fayde.KineticGraph": {}
   },
   "debug": {
     "warnMissingThemes": false,

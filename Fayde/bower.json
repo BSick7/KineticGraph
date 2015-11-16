@@ -1,19 +1,17 @@
 {
   "name": "Fayde.KineticGraph",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "ignore": [
-    "build",
-    "nuget",
-    "src",
+    "gulp",
     "test",
     "testsite",
     "typings",
-    "Gruntfile.js"
+    "gulpfile.js"
   ],
   "dependencies": {
-    "fayde": "~0.16.0"
+    "fayde": "~0.19.6"
   },
   "devDependencies": {
-    "qunit": "~1.15.0"
+    "qunit": "~1.20.0"
   }
 }

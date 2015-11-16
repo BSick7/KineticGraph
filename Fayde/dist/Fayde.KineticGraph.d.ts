@@ -1,5 +1,5 @@
 declare module Fayde.KineticGraph {
-    var Version: string;
+    var version: string;
 }
 declare module Fayde.KineticGraph {
     interface ILinkable {
@@ -51,7 +51,7 @@ declare module Fayde.KineticGraph.Physics {
     }
 }
 declare module Fayde.KineticGraph {
-    class EdgeCanvas extends Controls.Canvas implements Physics.IEdge {
+    class EdgeCanvas extends Fayde.Controls.Canvas implements Physics.IEdge {
         Source: Physics.INode;
         Sink: Physics.INode;
         private _IsBidirectional;
@@ -65,7 +65,7 @@ declare module Fayde.KineticGraph {
     }
 }
 declare module Fayde.KineticGraph {
-    class NodeCanvas extends Controls.Canvas implements Physics.INode {
+    class NodeCanvas extends Fayde.Controls.Canvas implements Physics.INode {
         private _Linkable;
         Linkable: ILinkable;
         PhysicalState: Physics.INodeState;
@@ -100,7 +100,7 @@ declare module Fayde.KineticGraph {
     }
 }
 declare module Fayde.KineticGraph {
-    class Graph extends Controls.Canvas implements ITimerListener {
+    class Graph extends Fayde.Controls.Canvas implements Fayde.ITimerListener {
         private _Engine;
         private _CanvasScale;
         private _CanvasTranslate;
